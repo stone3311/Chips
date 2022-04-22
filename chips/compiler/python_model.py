@@ -7,10 +7,10 @@ __version__ = "0.1"
 import chips_c
 import sys
 import math
-import register_map
+from . import register_map
 from chips.compiler.exceptions import StopSim, BreakSim, ChipsAssertionFail
 from chips.compiler.exceptions import NoProfile
-from utils import calculate_jumps
+from .utils import calculate_jumps
 from chips_c import bits_to_float, float_to_bits, bits_to_double, double_to_bits, add, subtract
 from chips_c import greater, greater_equal, unsigned_greater, unsigned_greater_equal
 from chips_c import shift_left, shift_right, unsigned_shift_right
@@ -49,11 +49,11 @@ def generate_python_model(
 
     # map input numbers to port models
     numbered_inputs = {}
-    for number, input_name in allocator.input_names.iteritems():
+    for number, input_name in allocator.input_names.items():
         if input_name in inputs:
             numbered_inputs[number] = inputs[input_name]
     numbered_outputs = {}
-    for number, output_name in allocator.output_names.iteritems():
+    for number, output_name in allocator.output_names.items():
         if output_name in outputs:
             numbered_outputs[number] = outputs[output_name]
 
@@ -220,9 +220,9 @@ class PythonModel:
         if instruction["op"] == "stop":
             self.program_counter = this_instruction
             wait = True
-            for file_ in self.input_files.values():
+            for file_ in list(self.input_files.values()):
                 file_.close()
-            for file_ in self.output_files.values():
+            for file_ in list(self.output_files.values()):
                 file_.close()
             raise StopSim
 
@@ -538,42 +538,42 @@ class PythonModel:
                     instruction["file"],
                     instruction["line"])
         elif instruction["op"] == "report":
-            print "%d (report (int) at line: %s in file: %s)" % (
+            print("%d (report (int) at line: %s in file: %s)" % (
                 to_32_signed(self.a_lo),
                 instruction["line"],
                 instruction["file"],
-            )
+            ))
         elif instruction["op"] == "long_report":
-            print "%d (report (long) at line: %s in file: %s)" % (
+            print("%d (report (long) at line: %s in file: %s)" % (
                 to_64_signed(chips_c.join_words(self.a_hi, self.a_lo)),
                 instruction["line"],
                 instruction["file"],
-            )
+            ))
         elif instruction["op"] == "float_report":
-            print "%f (report (float) at line: %s in file: %s)" % (
+            print("%f (report (float) at line: %s in file: %s)" % (
                 bits_to_float(self.a_lo),
                 instruction["line"],
                 instruction["file"],
-            )
+            ))
         elif instruction["op"] == "long_float_report":
-            print "%s (report (double) at line: %s in file: %s)" % (
+            print("%s (report (double) at line: %s in file: %s)" % (
 
                 bits_to_double(chips_c.join_words(self.a_hi, self.a_lo)),
                 instruction["line"],
                 instruction["file"],
-            )
+            ))
         elif instruction["op"] == "unsigned_report":
-            print "%d (report (unsigned) at line: %s in file: %s)" % (
+            print("%d (report (unsigned) at line: %s in file: %s)" % (
                 self.a_lo,
                 instruction["line"],
                 instruction["file"],
-            )
+            ))
         elif instruction["op"] == "long_unsigned_report":
-            print "%d (report (unsigned long) at line: %s in file: %s)" % (
+            print("%d (report (unsigned long) at line: %s in file: %s)" % (
                 chips_c.join_words(self.a_hi, self.a_lo),
                 instruction["line"],
                 instruction["file"],
-            )
+            ))
         elif instruction["op"] == "wait_clocks":
             if self.timer == operand_a:
                 wait = False
@@ -583,7 +583,7 @@ class PythonModel:
                 self.timer += 1
 
         else:
-            print "Unknown machine instruction", instruction["op"]
+            print("Unknown machine instruction", instruction["op"])
             sys.exit(-1)
 
         # Write data back

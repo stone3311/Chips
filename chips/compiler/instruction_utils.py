@@ -2,7 +2,7 @@ __author__ = "Jon Dawson"
 __copyright__ = "Copyright (C) 2012, Jonathan P Dawson"
 __version__ = "0.1"
 
-from register_map import *
+from .register_map import *
 
 
 def push(trace, instructions, reg):

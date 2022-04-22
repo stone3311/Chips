@@ -3,12 +3,12 @@ __copyright__ = "Copyright (C) 2012, Jonathan P Dawson"
 __version__ = "0.1"
 
 import struct
-from register_map import *
-from instruction_utils import *
-from instruction_utils import _return
-from exceptions import C2CHIPError, NotConstant
+from .register_map import *
+from .instruction_utils import *
+from .instruction_utils import _return
+from .exceptions import C2CHIPError, NotConstant
 from chips_c import bits_to_double, bits_to_float
-from types import *
+from .types import *
 
 
 class Trace:
@@ -480,7 +480,7 @@ class Switch:
         instructions = []
         instructions.extend(self.expression.generate())
         if size_of(self.expression) == 4:
-            for value, case in self.cases.iteritems():
+            for value, case in self.cases.items():
                 instructions.append({
                     "trace": self.trace,
                     "op": "literal",
@@ -501,7 +501,7 @@ class Switch:
                     "a": temp,
                 })
         else:
-            for value, case in self.cases.iteritems():
+            for value, case in self.cases.items():
                 instructions.append({
                     "trace": self.trace,
                     "op": "literal",

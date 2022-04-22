@@ -13,7 +13,7 @@ The area optimized implementation uses a CPU like architecture.
 __author__ = "Jon Dawson"
 __copyright__ = "Copyright (C) 2013, Jonathan P Dawson"
 
-from utils import calculate_jumps
+from .utils import calculate_jumps
 from textwrap import dedent
 
 
@@ -113,8 +113,8 @@ def generate_declarations(
     """Generate verilog declarations"""
 
     # list all inputs and outputs used in the program
-    inputs = allocator.input_names.values()
-    outputs = allocator.output_names.values()
+    inputs = list(allocator.input_names.values())
+    outputs = list(allocator.output_names.values())
     input_files = set([i["file_name"]
                        for i in instructions if "file_read" == i["op"]])
     output_files = set([i["file_name"]
@@ -396,15 +396,15 @@ def generate_CHIP(input_file,
     output_file.write(";\n")
 
     input_files = dict(
-        zip(input_files, ["input_file_%s" %
-                          i for i, j in enumerate(input_files)]))
-    for i in input_files.values():
+        list(zip(input_files, ["input_file_%s" %
+                          i for i, j in enumerate(input_files)])))
+    for i in list(input_files.values()):
         output_file.write("  integer %s;\n" % i)
 
     output_files = dict(
-        zip(output_files, ["output_file_%s" %
-                           i for i, j in enumerate(output_files)]))
-    for i in output_files.values():
+        list(zip(output_files, ["output_file_%s" %
+                           i for i, j in enumerate(output_files)])))
+    for i in list(output_files.values()):
         output_file.write("  integer %s;\n" % i)
 
     def write_declaration(object_type, name, size):
@@ -567,7 +567,7 @@ def generate_CHIP(input_file,
 #
     output_file.write("  \n  initial\n")
     output_file.write("  begin\n")
-    for location, content in initial_memory_contents.iteritems():
+    for location, content in initial_memory_contents.items():
         output_file.write("    memory[%s] = %s;\n"%(location, content))
     output_file.write("  end\n\n")
     output_file.write(
@@ -615,11 +615,11 @@ def generate_CHIP(input_file,
 
         output_file.write("  \n  initial\n")
         output_file.write("  begin\n")
-        for file_name, file_ in input_files.iteritems():
+        for file_name, file_ in input_files.items():
             output_file.write(
                 "    %s = $fopenr(\"%s\");\n" %
                 (file_, file_name))
-        for file_name, file_ in output_files.iteritems():
+        for file_name, file_ in output_files.items():
             output_file.write(
                 "    %s = $fopen(\"%s\");\n" %
                 (file_, file_name))
@@ -1167,7 +1167,7 @@ def generate_CHIP(input_file,
         elif instruction["op"] == "ready":
             output_file.write("          result <= 0;\n")
             output_file.write("          case(operand_a)\n\n")
-            for handle, input_name in allocator.input_names.iteritems():
+            for handle, input_name in allocator.input_names.items():
                 output_file.write("            %s:\n" % (handle))
                 output_file.write("            begin\n")
                 output_file.write(
@@ -1180,7 +1180,7 @@ def generate_CHIP(input_file,
         elif instruction["op"] == "output_ready":
             output_file.write("          result <= 0;\n")
             output_file.write("          case(operand_a)\n\n")
-            for handle, output_name in allocator.output_names.iteritems():
+            for handle, output_name in allocator.output_names.items():
                 output_file.write("            %s:\n" % (handle))
                 output_file.write("            begin\n")
                 output_file.write(
@@ -1265,17 +1265,17 @@ def generate_CHIP(input_file,
             # If we are in testbench mode stop the simulation
             # If we are part of a larger design, other C programs may still be
             # running
-            for file_ in input_files.values():
+            for file_ in list(input_files.values()):
                 output_file.write("          $fclose(%s);\n" % file_)
-            for file_ in output_files.values():
+            for file_ in list(output_files.values()):
                 output_file.write("          $fclose(%s);\n" % file_)
             if testbench:
                 output_file.write('          $finish;\n')
             output_file.write('        state <= stop;\n')
 
         else:
-            print "unsuported instruction", instruction["op"]
-            print instruction
+            print("unsuported instruction", instruction["op"])
+            print(instruction)
 
         output_file.write("        end\n\n")
     output_file.write("      endcase\n\n")
@@ -1419,7 +1419,7 @@ def generate_CHIP(input_file,
         output_file.write("    read:\n")
         output_file.write("    begin\n")
         output_file.write("      case(read_input)\n")
-        for handle, input_name in allocator.input_names.iteritems():
+        for handle, input_name in allocator.input_names.items():
             output_file.write("      %s:\n" % (handle))
             output_file.write("      begin\n")
             output_file.write("        s_input_%s_ack <= 1;\n" % input_name)
@@ -1439,7 +1439,7 @@ def generate_CHIP(input_file,
         output_file.write("    write:\n")
         output_file.write("    begin\n")
         output_file.write("      case(write_output)\n")
-        for handle, output_name in allocator.output_names.iteritems():
+        for handle, output_name in allocator.output_names.items():
             output_file.write("      %s:\n" % (handle))
             output_file.write("      begin\n")
             output_file.write("        s_output_%s_stb <= 1;\n" % output_name)

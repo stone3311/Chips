@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """A C to Verilog compiler - Command line interface"""
 
 __author__ = "Jon Dawson"
@@ -17,8 +17,8 @@ from chips.compiler.register_map import rregmap, frame, tos
 from chips.compiler.types import size_of
 
 if len(sys.argv) < 2 or "help" in sys.argv or "h" in sys.argv:
-    print "Usage: csim [options] <input_file>"
-    print
+    print("Usage: csim [options] <input_file>")
+    print()
     sys.exit(-1)
 
 input_file = sys.argv[-1]
@@ -34,21 +34,21 @@ def print_file_line(filename, lineno):
     lines = open(filename).read().splitlines()
 
     #show file and line number
-    print "\033[34m\033[1mFile:", filename
-    print "Line:", "[", lineno, "of", len(lines), "]"
-    print "\033[0m",
-    print "\033[39m"
+    print("\033[34m\033[1mFile:", filename)
+    print("Line:", "[", lineno, "of", len(lines), "]")
+    print("\033[0m", end=' ')
+    print("\033[39m")
 
     #Print a fragment of the file to show in context
     for i in range(lineno - 10, lineno + 10):
         if i < 1:
-            print
+            print()
         elif i > len(lines):
-            print
+            print()
         elif i == lineno:
-            print "\033[33m\033[1m", str(i).rjust(4), "\033[32m->", lines[i-1], "\033[0m\033[39m"
+            print("\033[33m\033[1m", str(i).rjust(4), "\033[32m->", lines[i-1], "\033[0m\033[39m")
         else:
-            print "\033[33m\033[1m", str(i).rjust(4), "\033[0m\033[39m  ", lines[i-1]
+            print("\033[33m\033[1m", str(i).rjust(4), "\033[0m\033[39m  ", lines[i-1])
 
 def print_process_state():
 
@@ -99,7 +99,7 @@ class command_interpreter(cmd.Cmd):
       try:
           model.step_into()
       except StopSim:
-          print "Process has completed"
+          print("Process has completed")
       print_process_state()
 
    def do_over(self, line): 
@@ -110,7 +110,7 @@ class command_interpreter(cmd.Cmd):
       try:
           model.step_over()
       except StopSim:
-          print "Process has completed"
+          print("Process has completed")
       print_process_state()
 
    def do_set_breakpoint(self, line): 
@@ -120,23 +120,23 @@ class command_interpreter(cmd.Cmd):
       clear()
       try:
           #print list of files
-          print "Code Files:"
+          print("Code Files:")
           code_files = sorted(profiler.code_files(model.instructions))
           for i, f in enumerate(code_files):
-              print "[%u] %s"%(i, f)
+              print("[%u] %s"%(i, f))
 
           #get user selection
-          print "\nEnter file:"
-          selection = raw_input()
+          print("\nEnter file:")
+          selection = input()
           f = code_files[int(selection)]
 
           line = 0
           while 1:
               clear()
               print_file_line(f, line)
-              print 
-              print "n=next, p=prev, j=down, k=up, blank=enter"
-              command = raw_input()
+              print() 
+              print("n=next, p=prev, j=down, k=up, blank=enter")
+              command = input()
               if command == "n":
                   line = abs(line + 10)
               elif command == "n":
@@ -151,15 +151,15 @@ class command_interpreter(cmd.Cmd):
           model.set_breakpoint(f, line)
 
       except StopSim:
-          print "Process has completed"
+          print("Process has completed")
       except (ValueError, IndexError):
-          print "Invalid selection"
+          print("Invalid selection")
 
    def do_stack_use(self, line): 
 
       """Print the maximum stack usage"""
 
-      print "Maximum Stack Usage: %s"%model.max_stack
+      print("Maximum Stack Usage: %s"%model.max_stack)
 
    def do_registers(self, line): 
 
@@ -169,7 +169,7 @@ class command_interpreter(cmd.Cmd):
       registers = model.get_registers()
       for number in range(16):
           register = registers.get(number, 0)
-          print "%0.10d:"%number, "%0.10u"%register, rregmap.get(number, "reserved")
+          print("%0.10d:"%number, "%0.10u"%register, rregmap.get(number, "reserved"))
 
    def do_instructions(self, line): 
 
@@ -179,9 +179,9 @@ class command_interpreter(cmd.Cmd):
       instructions = model.instructions
       for i, instruction in enumerate(instructions):
           if i == model.get_program_counter():
-              print "->", 
+              print("->", end=' ') 
           else:
-              print "  ", 
+              print("  ", end=' ') 
 
           z = instruction.get("z", 0)
           a = instruction.get("a", 0)
@@ -190,7 +190,7 @@ class command_interpreter(cmd.Cmd):
           literal = instruction.get("literal", 0)
           label = instruction.get("label", 0)
 
-          print "%0.10d:"%i, o.ljust(11), "%0.2d"%z, "%0.2d"%a, "%0.10d"%(b | label | literal)
+          print("%0.10d:"%i, o.ljust(11), "%0.2d"%z, "%0.2d"%a, "%0.10d"%(b | label | literal))
 
    def do_locals(self, line): 
 
@@ -206,23 +206,23 @@ class command_interpreter(cmd.Cmd):
 
       variables = function.local_variables
 
-      print "locals"
-      print "======"
-      for name, instance in variables.iteritems():
+      print("locals")
+      print("======")
+      for name, instance in variables.items():
           offset = instance.offset
-          print offset
+          print(offset)
           size = size_of(instance)
           if size == 4:
-              print name, ":", memory.get(frameval+offset, 0)
+              print(name, ":", memory.get(frameval+offset, 0))
           elif size == 8:
-              print name, ":", memory.get(frameval+offset+1, 0) << 32 | memory.get(frameval+offset, 0)
+              print(name, ":", memory.get(frameval+offset+1, 0) << 32 | memory.get(frameval+offset, 0))
           else:
-              print name, ":"
+              print(name, ":")
               for i in range((size//4+8)//8):
-                  print "%4x:"%(i*8),
+                  print("%4x:"%(i*8), end=' ')
                   for j in range(8):
-                      print "%08x"%memory.get(frameval+offset+8*i+j, 0), 
-                  print 
+                      print("%08x"%memory.get(frameval+offset+8*i+j, 0), end=' ') 
+                  print() 
 
    def do_globals(self, line): 
 
@@ -234,22 +234,22 @@ class command_interpreter(cmd.Cmd):
       global_scope = trace.global_scope
       memory = model.get_memory()
 
-      print "globals"
-      print "======="
-      for name, instance in global_scope.global_variables.iteritems():
+      print("globals")
+      print("=======")
+      for name, instance in global_scope.global_variables.items():
           offset = instance.offset
           size = size_of(instance)
           if size == 4:
-              print name, ":", memory.get(offset, 0)
+              print(name, ":", memory.get(offset, 0))
           elif size == 8:
-              print name, ":", memory.get(offset+1, 0) << 32 | memory.get(tos+offset, 0)
+              print(name, ":", memory.get(offset+1, 0) << 32 | memory.get(tos+offset, 0))
           else:
-              print name, ":"
+              print(name, ":")
               for i in range((size//4)//8):
-                  print "%4x:"%(i*8),
+                  print("%4x:"%(i*8), end=' ')
                   for j in range(8):
-                      print "%08x"%memory.get(offset+8*i+j, 0), 
-                  print 
+                      print("%08x"%memory.get(offset+8*i+j, 0), end=' ') 
+                  print() 
 
 
 
@@ -266,12 +266,12 @@ class command_interpreter(cmd.Cmd):
           if number == end_of_frame:
               break
           if number == start_of_frame:
-              print "->", 
+              print("->", end=' ') 
           else:
-              print "  ", 
+              print("  ", end=' ') 
 
           location = memory.get(number, 0)
-          print "%0.10d:"%number, "%0.10d"%location, "%0.8x"%location
+          print("%0.10d:"%number, "%0.10d"%location, "%0.8x"%location)
 
    def do_run_to_breakpoint(self, line): 
 
@@ -304,7 +304,7 @@ class command_interpreter(cmd.Cmd):
           profile = model.get_profile()
           profiler.report_coverage(profile, model.instructions)
       except NoProfile:
-          print "Profiling must be enabled to use this feature"
+          print("Profiling must be enabled to use this feature")
 
    def do_profile(self, line): 
 
@@ -315,7 +315,7 @@ class command_interpreter(cmd.Cmd):
           profile = model.get_profile()
           profiler.report_profile(profile, model.instructions)
       except NoProfile:
-          print "Profiling must be enabled to use this feature"
+          print("Profiling must be enabled to use this feature")
 
    def do_annotate(self, line): 
 
@@ -325,14 +325,14 @@ class command_interpreter(cmd.Cmd):
       try:
 
           #print list of files
-          print "Code Files:"
+          print("Code Files:")
           code_files = sorted(profiler.code_files(model.instructions))
           for i, f in enumerate(code_files):
-              print "[%u] %s"%(i, f)
+              print("[%u] %s"%(i, f))
 
           #get user selection
-          print "\nEnter file:"
-          selection = raw_input()
+          print("\nEnter file:")
+          selection = input()
           f = code_files[int(selection)]
 
           #annotate
@@ -340,9 +340,9 @@ class command_interpreter(cmd.Cmd):
           profiler.annotate_coverage(f, profile, model.instructions)
 
       except NoProfile:
-          print "Profiling must be enabled to use this feature"
+          print("Profiling must be enabled to use this feature")
       except (ValueError, IndexError):
-          print "Invalid selection"
+          print("Invalid selection")
 
 if "interactive" in options:
     command_interpreter().cmdloop()
@@ -353,6 +353,6 @@ else:
         except StopSim:
             break
         except ChipsAssertionFail as e:
-            print e
+            print(e)
             exit(1)
             break

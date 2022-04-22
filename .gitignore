@@ -13,3 +13,5 @@ chips_lib.v
 play*.v
 .*
 *.v
+*.egg-info
+*.so

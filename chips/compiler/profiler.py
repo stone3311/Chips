@@ -26,49 +26,49 @@ def code_files(instructions):
 
 def report_coverage(files, instructions):
 
-    print "filename".ljust(100),
-    print "code".center(10),
-    print "executed".center(10),
-    print "percent".center(10)
-    print ''.join(["=" for i in range(100)]),
-    print ''.join(["=" for i in range(10)]),
-    print ''.join(["=" for i in range(10)]),
-    print ''.join(["=" for i in range(10)])
+    print("filename".ljust(100), end=' ')
+    print("code".center(10), end=' ')
+    print("executed".center(10), end=' ')
+    print("percent".center(10))
+    print(''.join(["=" for i in range(100)]), end=' ')
+    print(''.join(["=" for i in range(10)]), end=' ')
+    print(''.join(["=" for i in range(10)]), end=' ')
+    print(''.join(["=" for i in range(10)]))
 
     for filename in sorted(code_files(instructions)):
         lines = files.get(filename, {})
         included = len(code_lines(filename, instructions))
         executed = len(lines)
 
-        print filename.ljust(100),
-        print str(included).center(10),
-        print str(executed).center(10),
-        print 100.0 * float(executed) / float(included)
+        print(filename.ljust(100), end=' ')
+        print(str(included).center(10), end=' ')
+        print(str(executed).center(10), end=' ')
+        print(100.0 * float(executed) / float(included))
 
 
 def report_profile(files, instructions):
 
-    print "filename".ljust(100),
-    print "line".center(10),
-    print "percent".center(10)
-    print ''.join(["=" for i in range(100)]),
-    print ''.join(["=" for i in range(10)]),
-    print ''.join(["=" for i in range(10)])
+    print("filename".ljust(100), end=' ')
+    print("line".center(10), end=' ')
+    print("percent".center(10))
+    print(''.join(["=" for i in range(100)]), end=' ')
+    print(''.join(["=" for i in range(10)]), end=' ')
+    print(''.join(["=" for i in range(10)]))
 
     total = 0
     for filename in sorted(code_files(instructions)):
         lines = files.get(filename, {})
-        for lines, count in lines.iteritems():
+        for lines, count in lines.items():
             total += count
 
     for filename in sorted(code_files(instructions)):
         lines = files.get(filename, {})
         for line, count in sorted(
-            lines.items(), key=operator.itemgetter(1), reverse=True
+            list(lines.items()), key=operator.itemgetter(1), reverse=True
         ):
-            print filename.ljust(100),
-            print str(line).center(10),
-            print 100.0 * float(count) / float(total)
+            print(filename.ljust(100), end=' ')
+            print(str(line).center(10), end=' ')
+            print(100.0 * float(count) / float(total))
 
 
 def annotate_coverage(filename, files, instructions):
@@ -76,16 +76,16 @@ def annotate_coverage(filename, files, instructions):
     source = open(filename)
     included = code_lines(filename, instructions)
 
-    print filename, ":\n"
+    print(filename, ":\n")
     for lineno, line in enumerate(source):
-        print lineno,
+        print(lineno, end=' ')
         if lineno + 1 in lines:
-            print ">",
+            print(">", end=' ')
         else:
             if lineno + 1 in included:
-                print "!",
+                print("!", end=' ')
             else:
-                print "-",
-        print line.rstrip()
+                print("-", end=' ')
+        print(line.rstrip())
 
     source.close()

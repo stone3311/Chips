@@ -242,7 +242,7 @@ class GuiInstance(wx.Frame):
         self.instructions_window.AddText(display)
 
     def update_code(self, filename, lineno):
-        for cw in self.file_windows.values():
+        for cw in list(self.file_windows.values()):
             cw.MarkerDeleteAll(0)
         cw = self.file_windows[filename]
         cw.GotoLine(lineno - 1)
@@ -281,7 +281,7 @@ class GuiInstance(wx.Frame):
         variables = function.local_variables
 
         display = ""
-        for name, instance in variables.iteritems():
+        for name, instance in variables.items():
             offset = instance.offset
             size = size_of(instance)
             type_ = instance.type_()
@@ -314,7 +314,7 @@ class GuiInstance(wx.Frame):
         memory = model.get_memory()
 
         display = ""
-        for name, instance in global_scope.global_variables.iteritems():
+        for name, instance in global_scope.global_variables.items():
             offset = instance.offset
             size = size_of(instance)
             type_ = instance.type_()
@@ -471,16 +471,16 @@ class GuiInstance(wx.Frame):
         total = 0
         for f in sorted(profiler.code_files(instructions)):
             lines = files.get(f, {})
-            for lines, count in lines.iteritems():
+            for lines, count in lines.items():
                 total += count
 
         for filename in sorted(code_files(instructions)):
             lines = files.get(filename, {})
-            for line, count in sorted(lines.items(), key=operator.itemgetter(1), reverse=True):
+            for line, count in sorted(list(lines.items()), key=operator.itemgetter(1), reverse=True):
                 report.report("%s %s %s" %(
                 filename.ljust(100),
                 str(line).center(10)))
-                print 100.0 * float(count) / float(total)
+                print(100.0 * float(count) / float(total))
 
     def annotate_coverage(self, filename):
         report = GuiReport(self, "Annotated Code Coverage")
@@ -490,7 +490,7 @@ class GuiInstance(wx.Frame):
         total = 0.0
         for f in sorted(profiler.code_files(instructions)):
             lines = files.get(f, {})
-            for lines, count in lines.iteritems():
+            for lines, count in lines.items():
                 total += count
 
         source = open(filename)

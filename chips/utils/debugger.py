@@ -58,7 +58,7 @@ class Debugger(wx.Frame):
 
     def set_running(self):
         self.running = True
-        for i in self.instance_windows.values():
+        for i in list(self.instance_windows.values()):
             i.reset.Enable(False)
             i.tick.Enable(False)
             i.into.Enable(False)
@@ -70,7 +70,7 @@ class Debugger(wx.Frame):
 
     def set_not_running(self):
         self.running = False
-        for i in self.instance_windows.values():
+        for i in list(self.instance_windows.values()):
             i.reset.Enable(True)
             i.tick.Enable(True)
             i.into.Enable(True)
@@ -94,7 +94,7 @@ class Debugger(wx.Frame):
             )
             self.instance_list.Append(description, instance)
 
-        for window in self.instance_windows.values():
+        for window in list(self.instance_windows.values()):
             window.update()
 
     def report_memory_usage(self, event):

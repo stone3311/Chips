@@ -58,62 +58,62 @@ int float_ge_xxxx(int a, int b){
     return  a >= b;
 }
 
-int long_float_equal_xxxx(long a, long b){
+int long_float_equal_xxxx(long long a, long long b){
     if (a < 0) {
-        a = 0x8000000000000000lu - a;
+        a = 0x8000000000000000llu - a;
     }
     if (b < 0) {
-        b = 0x8000000000000000lu - b;
+        b = 0x8000000000000000llu - b;
     }
     return  a == b;
 }
 
 int long_float_ne_xxxx(long a, long b){
     if (a < 0) {
-        a = 0x8000000000000000lu - a;
+        a = 0x8000000000000000llu - a;
     }
     if (b < 0) {
-        b = 0x8000000000000000lu - b;
+        b = 0x8000000000000000llu - b;
     }
     return  a != b;
 }
 
 int long_float_lt_xxxx(long a, long b){
     if (a < 0) {
-        a = 0x8000000000000000lu - a;
+        a = 0x8000000000000000llu - a;
     }
     if (b < 0) {
-        b = 0x8000000000000000lu - b;
+        b = 0x8000000000000000llu - b;
     }
     return  a < b;
 }
 
 int long_float_gt_xxxx(long a, long b){
     if (a < 0) {
-        a = 0x8000000000000000lu - a;
+        a = 0x8000000000000000llu - a;
     }
     if (b < 0) {
-        b = 0x8000000000000000lu - b;
+        b = 0x8000000000000000llu - b;
     }
     return  a > b;
 }
 
 int long_float_le_xxxx(long a, long b){
     if (a < 0) {
-        a = 0x8000000000000000lu - a;
+        a = 0x8000000000000000llu - a;
     }
     if (b < 0) {
-        b = 0x8000000000000000lu - b;
+        b = 0x8000000000000000llu - b;
     }
     return  a <= b;
 }
 
 int long_float_ge_xxxx(long a, long b){
     if (a < 0) {
-        a = 0x8000000000000000lu - a;
+        a = 0x8000000000000000llu - a;
     }
     if (b < 0) {
-        b = 0x8000000000000000lu - b;
+        b = 0x8000000000000000llu - b;
     }
     return  a >= b;
 }

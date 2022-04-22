@@ -1,5 +1,5 @@
-from register_map import *
-from instruction_utils import *
+from .register_map import *
+from .instruction_utils import *
 
 sn = 0
 

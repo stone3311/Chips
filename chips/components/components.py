@@ -2,10 +2,10 @@ from chips.api.api import Chip, Component, Wire, VerilogComponent
 from chips_c import float_to_bits, double_to_bits, low_word, high_word
 
 
-def async(chip, a, out=None):
+def do_async(chip, a, out=None):
     if out is None:
         out = Wire(chip)
-    async = Component(
+    my_async = Component(
         """void main(){
         int in = input("in");
         int out = output("out");
@@ -20,7 +20,7 @@ def async(chip, a, out=None):
         }
     }""",
         inline=True)
-    async(
+    my_async(
         chip,
         inputs={"in": a},
         outputs={"out": out},
@@ -834,26 +834,26 @@ if __name__ == "__main__":
     from chips.compiler.exceptions import C2CHIPError, ChipsAssertionFail
 
     def test_chip(chip, test_name):
-        print test_name,
+        print(test_name, end=' ')
         try:
             try:
                 chip.simulation_reset()
                 for i in range(1000):
                     chip.simulation_step()
             except ChipsAssertionFail:
-                print "....failed in simulation"
+                print("....failed in simulation")
                 return False
             chip.generate_verilog()
             chip.generate_testbench(1000)
             retval = chip.compile_iverilog(True)
             if retval != 0:
-                print "....failed in verilog simulation"
+                print("....failed in verilog simulation")
                 return False
 
         except C2CHIPError as e:
-            print "....compile error"
-            print e
-        print "....passed"
+            print("....compile error")
+            print(e)
+        print("....passed")
         return True
 
     # Test Arbiter

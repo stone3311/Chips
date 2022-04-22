@@ -2,14 +2,15 @@ __author__ = "Jon Dawson"
 __copyright__ = "Copyright (C) 2012, Jonathan P Dawson"
 __version__ = "0.1"
 
+import os
 import struct
 from copy import copy, deepcopy
 from textwrap import dedent
 
-from parse_tree import *
-from tokens import Tokens
-from allocator import Allocator
-from types import *
+from .parse_tree import *
+from .tokens import Tokens
+from .allocator import Allocator
+from .types import *
 
 types = [
     "double",
@@ -43,6 +44,7 @@ class Parser:
         self.global_scope = GlobalScope()
         self.function = self.global_scope
         self.loop = None
+        self.module_name = os.path.splitext(os.path.basename(input_file))[0]
         self.tokens = Tokens(input_file, parameters)
         self.allocator = Allocator(reuse)
         self.structs = []
@@ -69,7 +71,7 @@ class Parser:
                 break
         if not hasattr(self, "main"):
             self.tokens.error("Function main has not been defined")
-
+        self.main.name = self.module_name
         process.main = self.main
         process.scope = self.scope
         self.main.referenced = True
@@ -827,7 +829,7 @@ class Parser:
                 Trace(self),
                 ord(i)
             )
-            for i in initializer.strip('"').decode("string_escape")
+            for i in initializer.strip('"')
         ]
         initializer += [Constant(Trace(self), 0)]
         return initializer
@@ -1422,7 +1424,7 @@ class Parser:
 
         self.tokens.expect("(")
         file_name = self.tokens.get()
-        file_name = file_name.strip('"').decode("string_escape")
+        file_name = file_name.strip('"')
         self.tokens.expect(")")
         return FileRead(Trace(self), file_name)
 
@@ -1433,7 +1435,7 @@ class Parser:
         expression = self.parse_assignment()
         self.tokens.expect(",")
         file_name = self.tokens.get()
-        file_name = file_name.strip('"').decode("string_escape")
+        file_name = file_name.strip('"')
         self.tokens.expect(")")
         return FileWrite(Trace(self), file_name, expression)
 
@@ -1473,7 +1475,7 @@ class Parser:
         """parse the built-in function input"""
 
         self.tokens.expect("(")
-        input_name = self.tokens.get().strip('"').decode("string_escape")
+        input_name = self.tokens.get().strip('"')
         self.tokens.expect(")")
         return Constant(Trace(self), self.allocator.new_input(input_name))
 
@@ -1505,7 +1507,7 @@ class Parser:
         """parse the built-in function output"""
 
         self.tokens.expect("(")
-        output_name = self.tokens.get().strip('"').decode("string_escape")
+        output_name = self.tokens.get().strip('"')
         self.tokens.expect(")")
         return Constant(Trace(self), self.allocator.new_output(output_name))
 
@@ -1614,7 +1616,7 @@ class Parser:
         """parse a string literal"""
 
         try:
-            initializer = token.strip('"').decode("string_escape")
+            initializer = token.strip('"')
             initializer += "\x00"
             instance = ConstChar(
                 Trace(self),
@@ -1672,6 +1674,7 @@ class Parser:
                 type_ = "long"
                 size = 8
             token = token.upper().replace("U", "")
+            token = token.upper().replace("L", "")
             value = int(eval(token))
             if signed:
                 if value > 2 ** ((size * 8) - 1) - 1:

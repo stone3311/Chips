@@ -29,4 +29,4 @@ regmap = {
     "thirty_two": 12,
     "greater_than_32": 13,
 }
-rregmap = dict((j, i) for i, j in regmap.iteritems())
+rregmap = dict((j, i) for i, j in regmap.items())

@@ -1,12 +1,12 @@
 import web
-import StringIO
+import io
 import os.path
 from web import form
 from chips.compiler.parser import Parser
 from chips.compiler.exceptions import C2CHIPError
 from chips.compiler.macro_expander import expand_macros
 from chips.compiler.verilog_area import generate_CHIP as generate_CHIP_area
-from examples import examples
+from .examples import examples
 
 module_path = os.path.dirname(__file__)
 render = web.template.render(os.path.join(module_path, 'templates/'))
@@ -21,7 +21,7 @@ myform = form.Form(
     form.Textarea("C"),
     form.Dropdown(
         "Examples",
-        examples.keys(),
+        list(examples.keys()),
         onclick="return update_form()"),
 )
 
@@ -44,8 +44,8 @@ class source_entry:
 
     def GET(self):
         f = myform()
-        f["C"].value = examples.values()[0]
-        f["Examples"].value = examples.keys()[0]
+        f["C"].value = list(examples.values())[0]
+        f["Examples"].value = list(examples.keys())[0]
         return render.page(f)
 
     def POST(self):
@@ -69,7 +69,7 @@ def compile(c_buffer):
     instructions = process.generate()
     instructions = expand_macros(instructions, parser.allocator)
 
-    output_file = StringIO.StringIO()
+    output_file = io.StringIO()
 
     inputs, outputs = generate_CHIP_area(
         input_file,

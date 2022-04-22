@@ -12,7 +12,7 @@ from chips.compiler.exceptions import C2CHIPError
 from chips.compiler.macro_expander import expand_macros
 from chips.compiler.verilog_area import generate_CHIP as generate_CHIP_area
 from chips.compiler.python_model import generate_python_model
-import fpu
+from . import fpu
 
 
 def generate_library():
@@ -32,7 +32,7 @@ def generate_library():
     output_file.close()
 
 
-def comp(input_file, options={}, parameters={}, sn=0):
+def comp(input_file, options={}, parameters={}, sn=None):
 
     reuse = "no_reuse" not in options
     initialize_memory = "no_initialize_memory" not in options
@@ -42,19 +42,23 @@ def comp(input_file, options={}, parameters={}, sn=0):
             # Optimize for area
             parser = Parser(input_file, reuse, initialize_memory, parameters)
             process = parser.parse_process()
-            name = process.main.name + "_%s" % sn
+            if sn:
+                name = process.main.name + "_%s" % sn
+            else:
+                name = process.main.name
+                
             instructions = process.generate()
             instructions = expand_macros(instructions, parser.allocator)
             if "dump" in options:
                 for i in instructions:
-                    print (
+                    print((
                         i.get("op", "-"),
                         i.get("z", "-"),
                         i.get("a", "-"),
                         i.get("b", "-"),
                         i.get("literal", "-"),
                         i.get("trace"),
-                    )
+                    ))
             output_file = name + ".v"
             output_file = open(output_file, "w")
             inputs, outputs = generate_CHIP_area(
@@ -68,8 +72,8 @@ def comp(input_file, options={}, parameters={}, sn=0):
             output_file.close()
 
     except C2CHIPError as err:
-        print "Error in file:", err.filename, "at line:", err.lineno
-        print err.message
+        print("Error in file:", err.filename, "at line:", err.lineno)
+        print(err.message)
         sys.exit(-1)
 
     return name, inputs, outputs, ""
@@ -97,7 +101,7 @@ def compile_python_model(
             instructions = expand_macros(instructions, parser.allocator)
             if "dump" in options:
                 for i in instructions:
-                    print i
+                    print(i)
 
             debug = debug or ("debug" in options)
             profile = profile or ("profile" in options)
@@ -113,12 +117,12 @@ def compile_python_model(
 
             return (
                 model,
-                parser.allocator.input_names.values(),
-                parser.allocator.output_names.values(),
+                list(parser.allocator.input_names.values()),
+                list(parser.allocator.output_names.values()),
                 name
             )
 
     except C2CHIPError as err:
-        print "Error in file:", err.filename, "at line:", err.lineno
-        print err.message
+        print("Error in file:", err.filename, "at line:", err.lineno)
+        print(err.message)
         sys.exit(-1)

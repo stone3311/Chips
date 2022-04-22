@@ -311,7 +311,7 @@ class Chip:
 
         """
 
-        for component in self.components.values():
+        for component in list(self.components.values()):
             component.generate_verilog()
 
         for i in self.wires:
@@ -322,23 +322,23 @@ class Chip:
                 raise C2CHIPError(
                     "wire %s has no sink" % i.name, i.filename, i.lineno)
 
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             if i.sink is None:
                 raise C2CHIPError(
                     "input %s has no sink" % i.name, i.filename, i.lineno)
 
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             if i.source is None:
                 raise C2CHIPError(
                     "output %s has no source" % i.name, i.filename, i.lineno)
 
         ports = ["clk", "rst", "exception"]
-        ports += ["%s" % i.name for i in self.inputs.values()]
-        ports += ["%s_stb" % i.name for i in self.inputs.values()]
-        ports += ["%s_ack" % i.name for i in self.inputs.values()]
-        ports += ["%s" % i.name for i in self.outputs.values()]
-        ports += ["%s_stb" % i.name for i in self.outputs.values()]
-        ports += ["%s_ack" % i.name for i in self.outputs.values()]
+        ports += ["%s" % i.name for i in list(self.inputs.values())]
+        ports += ["%s_stb" % i.name for i in list(self.inputs.values())]
+        ports += ["%s_ack" % i.name for i in list(self.inputs.values())]
+        ports += ["%s" % i.name for i in list(self.outputs.values())]
+        ports += ["%s_stb" % i.name for i in list(self.outputs.values())]
+        ports += ["%s_ack" % i.name for i in list(self.outputs.values())]
         ports = ", ".join(ports)
 
         output_file = open(self.name + ".v", "w")
@@ -346,11 +346,11 @@ class Chip:
         output_file.write("  input  clk;\n")
         output_file.write("  input  rst;\n")
         output_file.write("  output  exception;\n")
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             output_file.write("  input  [31:0] %s;\n" % i.name)
             output_file.write("  input  %s_stb;\n" % i.name)
             output_file.write("  output %s_ack;\n" % i.name)
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             output_file.write("  output [31:0] %s;\n" % i.name)
             output_file.write("  output %s_stb;\n" % i.name)
             output_file.write("  input  %s_ack;\n" % i.name)
@@ -368,11 +368,11 @@ class Chip:
             ports.append(".clk(clk)")
             ports.append(".rst(rst)")
             ports.append(".exception(exception_%s)" % id(instance))
-            for name, i in instance.inputs.iteritems():
+            for name, i in instance.inputs.items():
                 ports.append(".input_%s(%s)" % (name, i.name))
                 ports.append(".input_%s_stb(%s_stb)" % (name, i.name))
                 ports.append(".input_%s_ack(%s_ack)" % (name, i.name))
-            for name, i in instance.outputs.iteritems():
+            for name, i in instance.outputs.items():
                 ports.append(".output_%s(%s)" % (name, i.name))
                 ports.append(".output_%s_stb(%s_stb)" % (name, i.name))
                 ports.append(".output_%s_ack(%s_ack)" % (name, i.name))
@@ -412,11 +412,11 @@ class Chip:
         output_file.write("module %s_tb;\n" % self.name)
         output_file.write("  reg  clk;\n")
         output_file.write("  reg  rst;\n")
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             output_file.write("  wire  [31:0] %s;\n" % i.name)
             output_file.write("  wire  %s_stb;\n" % i.name)
             output_file.write("  wire  %s_ack;\n" % i.name)
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             output_file.write("  wire  [31:0] %s;\n" % i.name)
             output_file.write("  wire  %s_stb;\n" % i.name)
             output_file.write("  wire  %s_ack;\n" % i.name)
@@ -445,11 +445,11 @@ class Chip:
         ports = []
         ports.append(".clk(clk)")
         ports.append(".rst(rst)")
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             ports.append(".%s(%s)" % (i.name, i.name))
             ports.append(".%s_stb(%s_stb)" % (i.name, i.name))
             ports.append(".%s_ack(%s_ack)" % (i.name, i.name))
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             ports.append(".%s(%s)" % (i.name, i.name))
             ports.append(".%s_stb(%s_stb)" % (i.name, i.name))
             ports.append(".%s_ack(%s_ack)" % (i.name, i.name))
@@ -524,12 +524,12 @@ class Chip:
             wire.ack = False
             wire.simulation_reset()
 
-        for input_ in self.inputs.values():
+        for input_ in list(self.inputs.values()):
             input_.stb = False
             input_.ack = False
             input_.simulation_reset()
 
-        for output in self.outputs.values():
+        for output in list(self.outputs.values()):
             output.stb = False
             output.ack = False
             output.simulation_reset()
@@ -568,13 +568,13 @@ class Chip:
         if AllDone:
             raise StopSim
 
-        for input_ in self.inputs.values():
+        for input_ in list(self.inputs.values()):
             input_.simulation_step()
 
-        for output in self.outputs.values():
+        for output in list(self.outputs.values()):
             output.simulation_step()
 
-        for i in self.inputs.values() + self.outputs.values() + self.wires:
+        for i in list(self.inputs.values()) + list(self.outputs.values()) + self.wires:
             i.simulation_update()
 
         self.time += 1
@@ -639,11 +639,11 @@ class Chip:
         output_file.write("  integer control_in;\n")
         output_file.write("  reg  clk;\n")
         output_file.write("  reg  rst;\n")
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             output_file.write("  reg  [31:0] %s;\n" % i.name)
             output_file.write("  reg  %s_stb;\n" % i.name)
             output_file.write("  wire %s_ack;\n" % i.name)
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             output_file.write("  wire [31:0] %s;\n" % i.name)
             output_file.write("  wire %s_stb;\n" % i.name)
             output_file.write("  reg  %s_ack;\n" % i.name)
@@ -668,17 +668,17 @@ class Chip:
         output_file.write("  begin\n")
         output_file.write("    if (!rst) begin\n")
 
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             output_file.write("      file_count = $fscanf(control_in, \"%%x\", %s);\n"%i.name)
             output_file.write("      file_count = $fscanf(control_in, \"%%x\", %s_stb);\n"%i.name)
 
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             output_file.write("      file_count = $fscanf(control_in, \"%%x\", %s_ack);\n"%i.name)
 
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             output_file.write("      $fwrite(control_out, \"%%x\\n\", %s_ack);\n"%i.name)
 
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             output_file.write("      $fwrite(control_out, \"%%x\\n\", %s_stb);\n"%i.name)
             output_file.write("      $fwrite(control_out, \"%%x\\n\", %s);\n"%i.name)
 
@@ -691,11 +691,11 @@ class Chip:
         ports = []
         ports.append(".clk(clk)")
         ports.append(".rst(rst)")
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             ports.append(".%s(%s)" % (i.name, i.name))
             ports.append(".%s_stb(%s_stb)" % (i.name, i.name))
             ports.append(".%s_ack(%s_ack)" % (i.name, i.name))
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             ports.append(".%s(%s)" % (i.name, i.name))
             ports.append(".%s_stb(%s_stb)" % (i.name, i.name))
             ports.append(".%s_ack(%s_ack)" % (i.name, i.name))
@@ -740,36 +740,36 @@ class Chip:
 
         """
 
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             self.control_in.write(hex(i.q)[2:] + "\n")
             self.control_in.flush()
-            print "a"
+            print("a")
             self.control_in.write(str(int(i.src_rdy)) + "\n")
             self.control_in.flush()
-            print "b"
+            print("b")
 
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             self.control_in.write(str(int(i.dst_rdy)) + "\n")
             self.control_in.flush()
-            print "c"
+            print("c")
 
-        for i in self.inputs.values():
+        for i in list(self.inputs.values()):
             i.dst_rdy = self.control_out.readline()
-            print "d"
+            print("d")
 
-        for i in self.outputs.values():
+        for i in list(self.outputs.values()):
             i.src_rdy = bool(self.control_out.readline())
-            print "e"
+            print("e")
             try:
                 i.q = int(self.control_out.readline(), 16)
-                print i.q
+                print(i.q)
             except ValueError:
                 i.q = 0
-                print "uninitialised"
+                print("uninitialised")
 
-        for i in self.inputs.values() + self.outputs.values():
+        for i in list(self.inputs.values()) + list(self.outputs.values()):
             i.simulation_step()
-        for i in self.inputs.values() + self.outputs.values():
+        for i in list(self.inputs.values()) + list(self.outputs.values()):
             i.simulation_update()
 
         self.time += 1
@@ -965,9 +965,9 @@ class _Instance:
         # check that correct number of wires have been passed in
         if len(component_inputs) != len(self.inputs):
             for i in component_inputs:
-                print "component inputs:"
+                print("component inputs:")
             for i in self.inputs:
-                print "instance inputs:"
+                print("instance inputs:")
             raise C2CHIPError(
                 "Instance %s does not have the right number or inputs" % (
                     component_name))
@@ -978,13 +978,13 @@ class _Instance:
                     component_name))
 
         # check for multiple sources or sinks
-        for i in inputs.values():
+        for i in list(inputs.values()):
             if i.sink is not None:
                 raise C2CHIPError(
                     "%s already has a sink" % i.name, i.filename, i.lineno)
             i.sink = self
 
-        for i in outputs.values():
+        for i in list(outputs.values()):
             if i.source is not None:
                 raise C2CHIPError(
                     "%s has already has a source" % (
@@ -993,12 +993,12 @@ class _Instance:
                         i.lineno))
             i.source = self
 
-        for i in inputs.keys():
+        for i in list(inputs.keys()):
             if i not in component_inputs:
                 raise C2CHIPError("%s is not an input of component %s" %
                                   (i, component_name), i.filename, i.lineno)
 
-        for i in outputs.keys():
+        for i in list(outputs.keys()):
             if i not in component_outputs:
                 raise C2CHIPError("%s is not an output of component %s" %
                                   (i, component_name), i.filename, i.lineno)

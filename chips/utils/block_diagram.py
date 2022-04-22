@@ -13,16 +13,16 @@ class BlockDiagram():
 
         for instance in self.chip.instances:
 
-            for port, wire in instance.inputs.iteritems():
+            for port, wire in instance.inputs.items():
                 sinks[str(id(wire))] = str(id(instance)) + ":" + port
 
-            for port, wire in instance.outputs.iteritems():
+            for port, wire in instance.outputs.items():
                 sources[str(id(wire))] = str(id(instance)) + ":" + port
 
             inputs = "|".join(["<%s> %s" % (i, i)
-                              for i in instance.inputs.keys()])
+                              for i in list(instance.inputs.keys())])
             outputs = "|".join(["<%s> %s" % (i, i)
-                               for i in instance.outputs.keys()])
+                               for i in list(instance.outputs.keys())])
             label = "{{%s}|%s|{%s}}" % (
                 inputs,
                 instance.component_name,
@@ -30,15 +30,15 @@ class BlockDiagram():
             )
             g.node(str(id(instance)), label=label, shape="record")
 
-        for input_ in self.chip.inputs.values():
+        for input_ in list(self.chip.inputs.values()):
             sources[str(id(input_))] = str(id(input_))
             g.node(str(id(input_)), label=input_.name, shape="record")
 
-        for output_ in self.chip.outputs.values():
+        for output_ in list(self.chip.outputs.values()):
             sinks[str(id(output_))] = str(id(output_))
             g.node(str(id(output_)), label=output_.name, shape="record")
 
-        for wire, source in sources.iteritems():
+        for wire, source in sources.items():
             sink = sinks[wire]
             g.edge(source, sink)
 

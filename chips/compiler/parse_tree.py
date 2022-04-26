@@ -970,21 +970,21 @@ class Expression:
 
         if self.type_() == "double":
             byte_value = struct.pack(">d", self.value())
-            value = ord(byte_value[0]) << 56
-            value |= ord(byte_value[1]) << 48
-            value |= ord(byte_value[2]) << 40
-            value |= ord(byte_value[3]) << 32
-            value |= ord(byte_value[4]) << 24
-            value |= ord(byte_value[5]) << 16
-            value |= ord(byte_value[6]) << 8
-            value |= ord(byte_value[7])
+            value = byte_value[0] << 56
+            value |= byte_value[1] << 48
+            value |= byte_value[2] << 40
+            value |= byte_value[3] << 32
+            value |= byte_value[4] << 24
+            value |= byte_value[5] << 16
+            value |= byte_value[6] << 8
+            value |= byte_value[7]
             return value
         elif self.type_() == "float":
             byte_value = struct.pack(">f", self.value())
-            value = ord(byte_value[0]) << 24
-            value |= ord(byte_value[1]) << 16
-            value |= ord(byte_value[2]) << 8
-            value |= ord(byte_value[3])
+            value = byte_value[0] << 24
+            value |= byte_value[1] << 16
+            value |= byte_value[2] << 8
+            value |= byte_value[3]
             return value
         else:
             return int(self.value())

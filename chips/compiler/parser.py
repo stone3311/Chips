@@ -829,7 +829,7 @@ class Parser:
                 Trace(self),
                 ord(i)
             )
-            for i in initializer.strip('"')
+            for i in bytes(initializer.strip('"'), "utf-8").decode("unicode_escape")
         ]
         initializer += [Constant(Trace(self), 0)]
         return initializer

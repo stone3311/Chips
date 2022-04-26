@@ -42,7 +42,7 @@ def comp(input_file, options={}, parameters={}, sn=None):
             # Optimize for area
             parser = Parser(input_file, reuse, initialize_memory, parameters)
             process = parser.parse_process()
-            if sn:
+            if sn is not None:
                 name = process.main.name + "_%s" % sn
             else:
                 name = process.main.name

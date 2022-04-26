@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import os
 import sys
 from random import randint
@@ -10,33 +10,33 @@ os.system("coverage2 erase")
 result = os.system("./test_api.py")
 
 if result == 0:
-  print "...pass"
+  print("...pass")
 else:
-  print "...fail"
+  print("...fail")
   sys.exit(0)
 
 result = os.system("./test_components")
 
 if result == 0:
-  print "...pass"
+  print("...pass")
 else:
-  print "...fail"
+  print("...fail")
   sys.exit(0)
 
 result = os.system("./test_stdlib")
 
 if result == 0:
-  print "...pass"
+  print("...pass")
 else:
-  print "...fail"
+  print("...fail")
   sys.exit(0)
 
 result = os.system("./test_compiler")
 
 if result == 0:
-  print "...pass"
+  print("...pass")
 else:
-  print "...fail"
+  print("...fail")
   sys.exit(0)
 
 #os.system("coverage2 run -p ../c2verilog dump_raw test.c")

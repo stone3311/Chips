@@ -22,22 +22,22 @@ def test(test, code, no_init=False, check_output=""):
 
   if "coverage" in sys.argv[1:]:
       #Test using csim compiler
-      python_process = subprocess.Popen(["coverage2", "run", "-p", "csim", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
+      python_process = subprocess.Popen(["coverage", "run", "-p", "../csim", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
 
       #Test using c2verilog compiler
       if no_init:
-          verilog_process = subprocess.Popen(["coverage2", "run", "-p", "c2verilog", "memory_size=8192", "iverilog", "run", "no_initialize_memory", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
+          verilog_process = subprocess.Popen(["coverage", "run", "-p", "../c2verilog", "memory_size=8192", "iverilog", "run", "no_initialize_memory", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
       else:
-          verilog_process = subprocess.Popen(["coverage2", "run", "-p", "c2verilog", "memory_size=8192", "iverilog", "run", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
+          verilog_process = subprocess.Popen(["coverage", "run", "-p", "../c2verilog", "memory_size=8192", "iverilog", "run", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
   else:
       #Test using csim compiler
-      python_process = subprocess.Popen(["csim", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
+      python_process = subprocess.Popen(["../csim", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
 
       #Test using c2verilog compiler
       if no_init:
-          verilog_process = subprocess.Popen(["c2verilog", "memory_size=8192", "iverilog", "run", "no_initialize_memory", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
+          verilog_process = subprocess.Popen(["../c2verilog", "memory_size=8192", "iverilog", "run", "no_initialize_memory", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
       else:
-          verilog_process = subprocess.Popen(["c2verilog", "memory_size=8192", "iverilog", "run", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
+          verilog_process = subprocess.Popen(["../c2verilog", "memory_size=8192", "iverilog", "run", "test.c"], stdout=subprocess.PIPE, encoding="utf-8")
 
 
   result = python_process.wait()
@@ -92,14 +92,14 @@ def test_fails(test, code, no_init=False):
   f.close()
   if "coverage" in sys.argv[1:]:
       if no_init:
-          result = os.system("coverage2 run -p c2verilog iverilog run no_initialize_memory test.c > /dev/null")
+          result = os.system("coverage run -p ../c2verilog iverilog run no_initialize_memory test.c > /dev/null")
       else:
-          result = os.system("coverage2 run -p c2verilog iverilog run test.c > /dev/null")
+          result = os.system("coverage run -p ../c2verilog iverilog run test.c > /dev/null")
   else:
       if no_init:
-          result = os.system("c2verilog iverilog run no_initialize_memory test.c > /dev/null")
+          result = os.system("../c2verilog iverilog run no_initialize_memory test.c > /dev/null")
       else:
-          result = os.system("c2verilog iverilog run test.c > /dev/null")
+          result = os.system("../c2verilog iverilog run test.c > /dev/null")
 
   if result == 0:
     print(test, "...fail")
@@ -109,9 +109,9 @@ def test_fails(test, code, no_init=False):
 
   #Test using csim compiler
   if "coverage" in sys.argv[1:]:
-      result = os.system("coverage2 run -p csim test.c > /dev/null")
+      result = os.system("coverage run -p ../csim test.c > /dev/null")
   else:
-      result = os.system("csim test.c > /dev/null")
+      result = os.system("../csim test.c > /dev/null")
 
   if result == 0:
     print(test, "...fail")
@@ -121,7 +121,7 @@ def test_fails(test, code, no_init=False):
     sn += 1
 
 
-class InvalidStimulus:
+class InvalidStimulus(Exception):
     pass
 
 def long_function(type_, operator, a, b):
@@ -211,7 +211,7 @@ def test_corner_cases(operator, type_):
                 program += """
                     i = 0x%xul;
                     j = 0x%xul;
-                    assert((i %s j) == %s);
+                    assert((i %s j) == %sul);
                 """%(uint64(a), 
                      uint64(b), 
                      operator,
@@ -224,7 +224,7 @@ def test_corner_cases(operator, type_):
 
 def test_random(operator, type_):
 
-    for i in range(thoroughness/10):
+    for i in range(thoroughness//10):
         program = """
         void main(){
             %s i;
@@ -245,11 +245,11 @@ def test_random(operator, type_):
                 program += """
                     i = 0x%xul;
                     j = 0x%xul;
-                    assert((i %s j) == %su);
+                    assert((i %s j) == %sul);
                 """%(uint64(a), 
                      uint64(b), 
                      operator,
-                     hex(long_function(type_, operator, a, b)))
+                     hex(uint64(long_function(type_, operator, a, b))))
             except InvalidStimulus:
                 pass
 

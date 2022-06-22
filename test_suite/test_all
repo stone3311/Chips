@@ -4,18 +4,10 @@ import sys
 from random import randint
 from numpy import uint64, int64
 
-os.system("coverage2 erase")
+os.system("coverage erase")
 
 
-result = os.system("./test_api.py")
-
-if result == 0:
-  print("...pass")
-else:
-  print("...fail")
-  sys.exit(0)
-
-result = os.system("./test_components")
+result = os.system("coverage run -p ./test_api.py")
 
 if result == 0:
   print("...pass")
@@ -23,7 +15,7 @@ else:
   print("...fail")
   sys.exit(0)
 
-result = os.system("./test_stdlib")
+result = os.system("coverage run -p ../chips/components/components.py")
 
 if result == 0:
   print("...pass")
@@ -31,7 +23,7 @@ else:
   print("...fail")
   sys.exit(0)
 
-result = os.system("./test_compiler")
+result = os.system("coverage run -p ../csim test_suite/test_math.c")
 
 if result == 0:
   print("...pass")
@@ -39,17 +31,25 @@ else:
   print("...fail")
   sys.exit(0)
 
-#os.system("coverage2 run -p ../c2verilog dump_raw test.c")
-#os.system("coverage2 run -p ../c2verilog dump_optimised test.c")
-os.system("coverage2 combine")
-os.system("coverage2 report > coverage_report")
-os.system("coverage2 annotate ../c2verilog")
-os.system("coverage2 annotate ../csim")
-os.system("coverage2 annotate ../chips/compiler/parser.py")
-os.system("coverage2 annotate ../chips/compiler/compiler.py")
-os.system("coverage2 annotate ../chips/compiler/macro_expander.py")
-os.system("coverage2 annotate ../chips/compiler/optimizer.py")
-os.system("coverage2 annotate ../chips/compiler/tokens.py")
-os.system("coverage2 annotate ../chips/compiler/allocator.py")
-os.system("coverage2 annotate ../chips/compiler/compiler.py")
-os.system("coverage2 annotate ../chips/compiler/verilog_area.py")
+result = os.system("./test_compiler coverage")
+
+if result == 0:
+  print("...pass")
+else:
+  print("...fail")
+  sys.exit(0)
+
+#os.system("coverage run -p ../c2verilog dump_raw test.c")
+#os.system("coverage run -p ../c2verilog dump_optimised test.c")
+os.system("coverage combine")
+os.system("coverage report > coverage_report")
+os.system("coverage annotate ../c2verilog")
+os.system("coverage annotate ../csim")
+os.system("coverage annotate ../chips/compiler/parser.py")
+os.system("coverage annotate ../chips/compiler/compiler.py")
+os.system("coverage annotate ../chips/compiler/macro_expander.py")
+os.system("coverage annotate ../chips/compiler/optimizer.py")
+os.system("coverage annotate ../chips/compiler/tokens.py")
+os.system("coverage annotate ../chips/compiler/allocator.py")
+os.system("coverage annotate ../chips/compiler/compiler.py")
+os.system("coverage annotate ../chips/compiler/verilog_area.py")

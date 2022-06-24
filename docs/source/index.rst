@@ -11,7 +11,8 @@ Contents
 
 .. toctree::
    home/index.rst
-   user_manual/install.rst
+   user_manual/index.rst
+   tutorial/index.rst
    examples/index.rst
    user_manual/index.rst
 

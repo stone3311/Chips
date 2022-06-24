@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import subprocess
 import atexit
@@ -7,7 +7,7 @@ from math import pi
 children = []
 def cleanup():
     for child in children:
-        print "Terminating child process"
+        print("Terminating child process")
         child.terminate()
 atexit.register(cleanup)
 

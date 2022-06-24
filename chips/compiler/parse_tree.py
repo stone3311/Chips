@@ -38,7 +38,7 @@ def flatten(sequence):
         l = []
         for i in sequence:
             l.extend(flatten(i))
-    except:
+    except BaseException:
         l = sequence
     return l
 
@@ -413,7 +413,6 @@ class WaitClocks:
              "op": "wait_clocks",
              "a": result})
         return instructions
-
 
 
 class If:
@@ -792,6 +791,7 @@ class LocalVariable:
     def const(self):
         return self._const
 
+
 class ConstChar:
 
     """ a constant string """
@@ -814,10 +814,9 @@ class ConstChar:
             instructions.append(
                 {"trace": self.trace,
                  "op": "constant",
-                 "offset": offset+index, 
-                 "value":int(ord(value))})
+                 "offset": offset + index,
+                 "value": int(ord(value))})
         return instructions
-
 
     def reference(self, trace):
         return Variable(trace, self)
@@ -865,11 +864,11 @@ class GlobalVariable:
             else:
                 instructions.extend(self.initializer.generate())
                 store_object(
-                            self.trace,
-                            instructions,
-                            n=size_of(self) // 4,
-                            offset=self.offset,
-                            local=False)
+                    self.trace,
+                    instructions,
+                    n=size_of(self) // 4,
+                    offset=self.offset,
+                    local=False)
         return instructions
 
     def reference(self, trace):
@@ -1863,7 +1862,6 @@ class Dereference(Object):
         except AttributeError:
             trace.error("Cannot dereference a non pointer")
 
-
     def address(self):
         instructions = []
         instructions.extend(self.expression.generate())
@@ -2059,6 +2057,7 @@ class FileWrite(Expression):
 
         return instructions
 
+
 class TimerLow(Expression):
 
     """ return timer low value """
@@ -2072,9 +2071,10 @@ class TimerLow(Expression):
         instructions.append({
             "trace": self.trace,
             "op": "timer_low",
-            "z":result
+            "z": result
         })
         return instructions
+
 
 class TimerHigh(Expression):
 
@@ -2089,7 +2089,7 @@ class TimerHigh(Expression):
         instructions.append({
             "trace": self.trace,
             "op": "timer_high",
-            "z":result
+            "z": result
         })
         return instructions
 

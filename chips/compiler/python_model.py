@@ -15,15 +15,18 @@ from chips_c import bits_to_float, float_to_bits, bits_to_double, double_to_bits
 from chips_c import greater, greater_equal, unsigned_greater, unsigned_greater_equal
 from chips_c import shift_left, shift_right, unsigned_shift_right
 
+
 def to_32_signed(a):
     if a & 0x80000000:
         return a | (~0xffffffff)
     return a
 
+
 def to_64_signed(a):
     if a & 0x8000000000000000:
         return a | (~0xffffffffffffffff)
     return a
+
 
 def generate_python_model(
         debug,
@@ -284,7 +287,11 @@ class PythonModel:
             else:
                 self.a_lo = int(i) & 0xffffffff
         elif instruction["op"] == "long_to_double":
-            double = float(to_64_signed(chips_c.join_words(self.a_hi, self.a_lo)))
+            double = float(
+                to_64_signed(
+                    chips_c.join_words(
+                        self.a_hi,
+                        self.a_lo)))
             if math.isnan(double):
                 self.a_hi = 0
                 self.a_lo = 0
@@ -292,7 +299,11 @@ class PythonModel:
                 self.a_hi = chips_c.high_word(double_to_bits(double))
                 self.a_lo = chips_c.low_word(double_to_bits(double))
         elif instruction["op"] == "double_to_long":
-            bits = int(bits_to_double(chips_c.join_words(self.a_hi, self.a_lo)))
+            bits = int(
+                bits_to_double(
+                    chips_c.join_words(
+                        self.a_hi,
+                        self.a_lo)))
             bits &= 0xffffffffffffffff
             self.a_hi = chips_c.high_word(bits)
             self.a_lo = chips_c.low_word(bits)
@@ -305,19 +316,19 @@ class PythonModel:
             f = bits_to_double(chips_c.join_words(self.a_hi, self.a_lo))
             self.a_lo = float_to_bits(f)
         elif instruction["op"] == "add":
-            total = add(operand_a, operand_b, 0);
+            total = add(operand_a, operand_b, 0)
             result = total.lo
             self.carry = total.hi
         elif instruction["op"] == "add_with_carry":
-            total = add(operand_a, operand_b, self.carry);
+            total = add(operand_a, operand_b, self.carry)
             result = total.lo
             self.carry = total.hi
         elif instruction["op"] == "subtract":
-            total = subtract(operand_a, operand_b, 1);
+            total = subtract(operand_a, operand_b, 1)
             result = total.lo
             self.carry = total.hi
         elif instruction["op"] == "subtract_with_carry":
-            total = subtract(operand_a, operand_b, self.carry);
+            total = subtract(operand_a, operand_b, self.carry)
             result = total.lo
             self.carry = total.hi
         elif instruction["op"] == "multiply":
@@ -413,9 +424,9 @@ class PythonModel:
         elif instruction["op"] == "goto":
             self.program_counter = literal
         elif instruction["op"] == "timer_low":
-            result = self.clock&0xffffffff
+            result = self.clock & 0xffffffff
         elif instruction["op"] == "timer_high":
-            result = self.clock>>32
+            result = self.clock >> 32
         elif instruction["op"] == "file_read":
             value = self.input_files[instruction["filename"]].getline()
             result = value

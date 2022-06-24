@@ -37,7 +37,8 @@ class file_download:
             web.header("content-transfer-encoding", "binary")
             return code
         except C2CHIPError as err:
-            return "Error in file: " + err.filename + " at line: " + str(err.lineno) + "\n" + err.message
+            return "Error in file: " + err.filename + \
+                " at line: " + str(err.lineno) + "\n" + err.message
 
 
 class source_entry:
@@ -80,6 +81,7 @@ def compile(c_buffer):
         False)
 
     return output_file.getvalue()
+
 
 if __name__ == "__main__":
     web.config.debug = False

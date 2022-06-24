@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import subprocess
 import atexit
@@ -8,13 +8,13 @@ try:
     from matplotlib import pyplot
     from mpl_toolkits.mplot3d import Axes3D
 except ImportError:
-    print "You need matplotlib to run this script!"
+    print("You need matplotlib to run this script!")
     exit(0)
 
 children = []
 def cleanup():
     for child in children:
-        print "Terminating child process"
+        print("Terminating child process")
         child.terminate()
 atexit.register(cleanup)
 

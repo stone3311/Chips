@@ -97,18 +97,18 @@ class GuiInstance(wx.Frame):
             shortHelp="StopSimualtion"
         )
         self.report_memory_usage = toolbar.AddLabelTool(
-                wx.NewId(), 
-                "report memory usage", 
-                wx.Bitmap(os.path.join(image_dir, "stop.png")), 
-                wx.Bitmap(os.path.join(image_dir, "stop_disabled.png")), 
-                shortHelp="Report Memory Usage"
+            wx.NewId(),
+            "report memory usage",
+            wx.Bitmap(os.path.join(image_dir, "stop.png")),
+            wx.Bitmap(os.path.join(image_dir, "stop_disabled.png")),
+            shortHelp="Report Memory Usage"
         )
         self.report_code_coverage = toolbar.AddLabelTool(
-                wx.NewId(), 
-                "report coverage", 
-                wx.Bitmap(os.path.join(image_dir, "stop.png")), 
-                wx.Bitmap(os.path.join(image_dir, "stop_disabled.png")), 
-                shortHelp="Report Code Coverage"
+            wx.NewId(),
+            "report coverage",
+            wx.Bitmap(os.path.join(image_dir, "stop.png")),
+            wx.Bitmap(os.path.join(image_dir, "stop_disabled.png")),
+            shortHelp="Report Code Coverage"
         )
         self.stop.Enable(False)
         self.Bind(wx.EVT_TOOL, self.on_reset, self.reset)
@@ -204,7 +204,7 @@ class GuiInstance(wx.Frame):
         self.breakpoints = {}
         self.Bind(wx.EVT_CLOSE, self.on_exit)
         self.open_files()
-        self.instance.model.profile=True
+        self.instance.model.profile = True
 
         self.Show()
 
@@ -252,7 +252,6 @@ class GuiInstance(wx.Frame):
         cw.SetKeyWords(0, " ".join(keywords))
         cw.Colourise(0, -1)
         self.code.SetSelection(self.file_mapping[filename])
-
 
     def mem_location_as_value(self, memory, type_, size, location):
 
@@ -457,16 +456,16 @@ class GuiInstance(wx.Frame):
         files = self.instance.model.get_profile()
         instructions = self.instance.model.instructions
         for filename in sorted(profiler.code_files(instructions)):
-            lines    = files.get(filename, {})
+            lines = files.get(filename, {})
             included = len(profiler.code_lines(filename, instructions))
             executed = len(lines)
 
-            report.report("%s%s%s%s"%(
+            report.report("%s%s%s%s" % (
                 filename.ljust(100),
                 str(included).center(10),
                 str(executed).center(10),
-                100.0 * float(executed)/float(included)
-            ), float(executed)/float(included))
+                100.0 * float(executed) / float(included)
+            ), float(executed) / float(included))
 
         total = 0
         for f in sorted(profiler.code_files(instructions)):
@@ -476,15 +475,16 @@ class GuiInstance(wx.Frame):
 
         for filename in sorted(code_files(instructions)):
             lines = files.get(filename, {})
-            for line, count in sorted(list(lines.items()), key=operator.itemgetter(1), reverse=True):
-                report.report("%s %s %s" %(
-                filename.ljust(100),
-                str(line).center(10)))
+            for line, count in sorted(
+                    list(lines.items()), key=operator.itemgetter(1), reverse=True):
+                report.report("%s %s %s" % (
+                    filename.ljust(100),
+                    str(line).center(10)))
                 print(100.0 * float(count) / float(total))
 
     def annotate_coverage(self, filename):
         report = GuiReport(self, "Annotated Code Coverage")
-        
+
         files = self.instance.model.get_profile()
         instructions = self.instance.model.instructions
         total = 0.0
@@ -498,13 +498,13 @@ class GuiInstance(wx.Frame):
         lines = files.get(filename, {})
 
         for lineno, line in enumerate(source):
-            report_line = str(lineno+1) + " "
-            report_line += str(lines.get(lineno+1, 0)).ljust(10) + " "
-            if lineno+1 in lines:
+            report_line = str(lineno + 1) + " "
+            report_line += str(lines.get(lineno + 1, 0)).ljust(10) + " "
+            if lineno + 1 in lines:
                 report_line += "> "
-                status = log(lines[lineno + 1])/log(total)
+                status = log(lines[lineno + 1]) / log(total)
             else:
-                if lineno+1 in included:
+                if lineno + 1 in included:
                     report_line += "! "
                     status = 0
                 else:

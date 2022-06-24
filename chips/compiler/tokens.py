@@ -60,7 +60,10 @@ class Tokens:
                 "-isystem",
                 directory,
                 filename]
-            pipe = subprocess.Popen(cpp_commands, stdout=subprocess.PIPE, encoding="utf-8")
+            pipe = subprocess.Popen(
+                cpp_commands,
+                stdout=subprocess.PIPE,
+                encoding="utf-8")
             input_file = pipe.stdout
         else:
             if input_file is None:

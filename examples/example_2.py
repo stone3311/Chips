@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import subprocess
 import atexit
@@ -8,12 +8,12 @@ from chips.api.api import Chip, Stimulus, Response, Wire, Component
 try:
     from matplotlib import pyplot
 except ImportError:
-    print "You need matplotlib to run this script!"
+    print("You need matplotlib to run this script!")
     exit(0)
 try:
     from numpy import arange
 except ImportError:
-    print "You need numpy to run this script!"
+    print("You need numpy to run this script!")
     exit(0)
 
 def test():

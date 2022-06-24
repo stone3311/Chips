@@ -384,7 +384,6 @@ class Chip:
         output_file.write("endmodule\n")
         output_file.close()
 
-
     def generate_testbench(self, stop_clocks=None):
         """
 
@@ -574,7 +573,8 @@ class Chip:
         for output in list(self.outputs.values()):
             output.simulation_step()
 
-        for i in list(self.inputs.values()) + list(self.outputs.values()) + self.wires:
+        for i in list(self.inputs.values()) + \
+                list(self.outputs.values()) + self.wires:
             i.simulation_update()
 
         self.time += 1
@@ -669,23 +669,34 @@ class Chip:
         output_file.write("    if (!rst) begin\n")
 
         for i in list(self.inputs.values()):
-            output_file.write("      file_count = $fscanf(control_in, \"%%x\", %s);\n"%i.name)
-            output_file.write("      file_count = $fscanf(control_in, \"%%x\", %s_stb);\n"%i.name)
+            output_file.write(
+                "      file_count = $fscanf(control_in, \"%%x\", %s);\n" %
+                i.name)
+            output_file.write(
+                "      file_count = $fscanf(control_in, \"%%x\", %s_stb);\n" %
+                i.name)
 
         for i in list(self.outputs.values()):
-            output_file.write("      file_count = $fscanf(control_in, \"%%x\", %s_ack);\n"%i.name)
+            output_file.write(
+                "      file_count = $fscanf(control_in, \"%%x\", %s_ack);\n" %
+                i.name)
 
         for i in list(self.inputs.values()):
-            output_file.write("      $fwrite(control_out, \"%%x\\n\", %s_ack);\n"%i.name)
+            output_file.write(
+                "      $fwrite(control_out, \"%%x\\n\", %s_ack);\n" %
+                i.name)
 
         for i in list(self.outputs.values()):
-            output_file.write("      $fwrite(control_out, \"%%x\\n\", %s_stb);\n"%i.name)
-            output_file.write("      $fwrite(control_out, \"%%x\\n\", %s);\n"%i.name)
+            output_file.write(
+                "      $fwrite(control_out, \"%%x\\n\", %s_stb);\n" %
+                i.name)
+            output_file.write(
+                "      $fwrite(control_out, \"%%x\\n\", %s);\n" %
+                i.name)
 
         output_file.write("    end\n")
 
         output_file.write("  end\n\n")
-
 
         output_file.write("  %s uut(\n    " % (self.name))
         ports = []
@@ -704,7 +715,7 @@ class Chip:
         output_file.write("endmodule\n")
         output_file.close()
 
-        #Compile files using iverilog        
+        # Compile files using iverilog
         files = ["%s.v" % i.component_name for i in self.instances]
         files.append(self.name + ".v")
         files.append(self.name + "_wrap.v")
@@ -712,10 +723,9 @@ class Chip:
         files = " ".join(files)
         os.system("iverilog -o %s %s" % (self.name + "_wrap", files))
 
-        self.cosim = subprocess.Popen(["vvp", "./%s_wrap"%self.name])
+        self.cosim = subprocess.Popen(["vvp", "./%s_wrap" % self.name])
         self.control_in = open("control_in", 'w')
         self.control_out = open("control_out")
-        
 
     def cosim_step(self):
         """

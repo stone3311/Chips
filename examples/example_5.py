@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import subprocess
 import atexit
@@ -7,21 +7,21 @@ from math import pi, sin, cos
 from chips.api.api import Chip, Stimulus, Response, Wire, Component
 
 try:
-    import scipy as s
+    from scipy.fft import fft as sfft
 except ImportError:
-    print "You need scipy to run this script!"
+    print("You need scipy to run this script!")
     exit(0)
 
 try:
     import numpy as n
 except ImportError:
-    print "You need numpy to run this script!"
+    print("You need numpy to run this script!")
     exit(0)
 
 try:
     from matplotlib import pyplot
 except ImportError:
-    print "You need matplotlib to run this script!"
+    print("You need matplotlib to run this script!")
     exit(0)
 
 def test():
@@ -64,7 +64,7 @@ def test():
     fft_x_im = list(fft_x_im)[:len(x_im)]
 
     time_complex = [i + (j*1.0) for i, j in zip(x_re, x_im)]
-    numpy_complex = s.fft(time_complex)
+    numpy_complex = sfft(time_complex)
     numpy_magnitude = n.abs(numpy_complex)
 
     chips_complex = [i + (j*1.0j) for i, j in zip(fft_x_re, fft_x_im)]

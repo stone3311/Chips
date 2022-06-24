@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from chips.api.api import *
 from math import ceil, log
 
 try:
     from PIL import Image
 except ImportError:
-    print "You need Python Imaging Library to run this script!"
+    print("You need Python Imaging Library to run this script!")
     exit(0)
 
 def test():
@@ -33,7 +33,7 @@ def test():
     """
 
     chip = Chip("compression_test")
-    test_in = Stimulus(chip, "test_in", "int", map(ord, test_data))
+    test_in = Stimulus(chip, "test_in", "int", list(map(ord, test_data)))
     wire = Wire(chip)
     test_out = Response(chip, "test_out", "int")
     
@@ -78,11 +78,11 @@ def test():
 
 
     #show the result
-    print len(test_in)
-    print "".join(map(chr, list(test_in)[:1024]))
-    print len(test_out)
-    print "".join(map(chr, list(test_out)[:1024]))
-    print list(test_in)[:1024] == list(test_out)[:1024]
+    print(len(test_in))
+    print("".join(map(chr, list(test_in)[:1024])))
+    print(len(test_out))
+    print("".join(map(chr, list(test_out)[:1024])))
+    print(list(test_in)[:1024] == list(test_out)[:1024])
 
 def indent(lines):
     return "\n    ".join(lines.splitlines())

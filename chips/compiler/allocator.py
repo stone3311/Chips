@@ -32,4 +32,3 @@ class Allocator:
         self.handle += 1
         self.output_names[handle] = name
         return handle
-

@@ -736,6 +736,7 @@ def long_float_add(trace, instruction):
          "a": result_hi})
     return instructions
 
+
 def long_divide(trace, instruction):
     instructions = []
     instructions.append(
@@ -770,6 +771,7 @@ def long_divide(trace, instruction):
          "z": result_hi,
          "a": result_hi})
     return instructions
+
 
 def long_modulo(trace, instruction):
     instructions = []
@@ -806,6 +808,7 @@ def long_modulo(trace, instruction):
          "a": result_hi})
     return instructions
 
+
 def unsigned_long_divide(trace, instruction):
     instructions = []
     instructions.append(
@@ -840,6 +843,7 @@ def unsigned_long_divide(trace, instruction):
          "z": result_hi,
          "a": result_hi})
     return instructions
+
 
 def unsigned_long_modulo(trace, instruction):
     instructions = []

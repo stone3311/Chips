@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import subprocess
 import atexit
@@ -10,19 +10,19 @@ try:
     import scipy as s
     from scipy.signal import firwin
 except ImportError:
-    print "You need scipy to run this script!"
+    print("You need scipy to run this script!")
     exit(0)
 
 try:
     import numpy as n
 except ImportError:
-    print "You need numpy to run this script!"
+    print("You need numpy to run this script!")
     exit(0)
 
 try:
     from matplotlib import pyplot
 except ImportError:
-    print "You need matplotlib to run this script!"
+    print("You need matplotlib to run this script!")
     exit(0)
 
 def test():
@@ -57,7 +57,7 @@ def test():
     #run the simulation
     chip.simulation_reset()
     while len(cos) < 1024:
-        print len(cos)/1024.0
+        print(len(cos)/1024.0)
         chip.simulation_step()
         
     #plot the result

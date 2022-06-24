@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import inspect
 
@@ -6,7 +6,7 @@ def test():
 
     from math import pi
     from numpy import abs
-    from scipy import fft
+    from scipy.fft import fft
     from scipy.signal import firwin
     from matplotlib import pyplot
     from chips.api.api import Chip, Stimulus, Response, Wire, Component
@@ -45,7 +45,7 @@ def test():
         chip.simulation_step()
         
     #plot the result
-    pyplot.semilogy(abs(fft(list(output)))[0:len(output)/2])
+    pyplot.semilogy(abs(fft(list(output)))[0:len(output)//2])
     pyplot.title("Magnitude of Impulse Response")
     pyplot.xlim(0, 512)
     pyplot.xlabel("X Sample")

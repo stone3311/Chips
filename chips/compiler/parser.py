@@ -192,20 +192,16 @@ class Parser:
         if self.tokens.peek() != "(":
             return self.parse_global_declaration(name, type_specifier)
 
-        msg = [dedent(i) for i in [
-
-               "%s was previously declared, but was not a function.",
-
-               """Function type differs from previous function declaration
+        msg = [
+            dedent(i) for i in [
+                "%s was previously declared, but was not a function.",
+                """Function type differs from previous function declaration
         expected: %s got: %s""",
-
-               """Function signedness differs from previous function declaration
+                """Function signedness differs from previous function declaration
         expected: %s got: %s""",
-
-               """Argument constness differs from previous function declaration
+                """Argument constness differs from previous function declaration
         expected: %s got: %s""",
-
-               ]]
+            ]]
 
         if name in self.scope:
             allready_defined = True
@@ -256,21 +252,17 @@ class Parser:
         for argument, argument_declaration in arguments:
             function.offset -= type_arg_size(argument_declaration.type_) // 4
 
-        msg = [dedent(i) for i in [
-
-               """Function has a different number of arguments to previous
+        msg = [
+            dedent(i) for i in [
+                """Function has a different number of arguments to previous
         declaration""",
-
-               """Argument type differs from previous function declaration
+                """Argument type differs from previous function declaration
         expected: %s got: %s""",
-
-               """Argument signedness differs from previous function declaration
+                """Argument signedness differs from previous function declaration
         expected: %s got: %s""",
-
-               """Argument constness differs from previous function declaration
+                """Argument constness differs from previous function declaration
         expected: %s got: %s""",
-
-               ]]
+            ]]
 
         # arguments look like a series of declarations, for each argument
         # create an instance - like a local variable.
@@ -326,7 +318,8 @@ class Parser:
                 )
             function.has_definition = True
             function.statement = self.parse_statement()
-            if type_specifier.type_ != "void" and not hasattr(function, "return_statement"):
+            if type_specifier.type_ != "void" and not hasattr(
+                    function, "return_statement"):
                 self.tokens.error(
                     "Non-void function must have a return statement")
 
@@ -370,9 +363,8 @@ class Parser:
                 expression = self.to_int(expression)
             elif not self.function.type_() == expression.type_():
                 self.tokens.error(
-                    "type mismatch in return statement expected: %s actual: %s" % (
-                        self.function.type_(),
-                        expression.type_()))
+                    "type mismatch in return statement expected: %s actual: %s" %
+                    (self.function.type_(), expression.type_()))
 
             return_.expression = expression
 
@@ -934,7 +926,8 @@ class Parser:
                 initializer = self.parse_variable_initializer(
                     type_specifier.type_)
 
-        if hasattr(type_specifier.type_, "dimensions") and type_specifier.type_.dimensions[-1] is None:
+        if hasattr(type_specifier.type_,
+                   "dimensions") and type_specifier.type_.dimensions[-1] is None:
             self.tokens.error(
                 "Array size must be specified if not initialized")
 
@@ -1059,10 +1052,9 @@ class Parser:
             left = self.to_long(left)
         elif is_pointer_to(left) and is_pointer_to(right):
             if operation not in ["-", "!=", "==", "<", ">", ">=", "<="]:
-                self.tokens.error("Operation is permitted for two pointers : %s %s" % (
-                    left.type_(),
-                    right.type_(),
-                ))
+                self.tokens.error(
+                    "Operation is permitted for two pointers : %s %s" %
+                    (left.type_(), right.type_(), ))
             if left.type_() != right.type_():
                 self.tokens.error("pointer types must be identical : %s %s" % (
                     left.type_(),
@@ -1071,27 +1063,23 @@ class Parser:
 
         elif is_pointer_to(left):
             if operation not in ["+", "-"]:
-                self.tokens.error("Only addition and subtraction are permitted for pointer arithmetic: %s %s" % (
-                    left.type_(),
-                    right.type_(),
-                ))
+                self.tokens.error(
+                    "Only addition and subtraction are permitted for pointer arithmetic: %s %s" %
+                    (left.type_(), right.type_(), ))
             if right.type_() not in integer_like:
-                self.tokens.error("Only integer like expressions may be used in pointer arithmetic : %s %s" % (
-                    left.type_(),
-                    right.type_(),
-                ))
+                self.tokens.error(
+                    "Only integer like expressions may be used in pointer arithmetic : %s %s" %
+                    (left.type_(), right.type_(), ))
 
         elif is_pointer_to(right):
             if operation not in ["+", "-"]:
-                self.tokens.error("Only addition and subtraction are permitted for pointer arithmetic: %s %s" % (
-                    left.type_(),
-                    right.type_(),
-                ))
+                self.tokens.error(
+                    "Only addition and subtraction are permitted for pointer arithmetic: %s %s" %
+                    (left.type_(), right.type_(), ))
             if left.type_() not in integer_like:
-                self.tokens.error("Only integer like expressions may be used in pointer arithmetic : %s %s" % (
-                    left.type_(),
-                    right.type_(),
-                ))
+                self.tokens.error(
+                    "Only integer like expressions may be used in pointer arithmetic : %s %s" %
+                    (left.type_(), right.type_(), ))
 
         elif left.type_() != right.type_():
             self.tokens.error("Incompatible types : %s %s" % (
@@ -1176,7 +1164,13 @@ class Parser:
                 self.tokens.error(
                     "! is only valid for integer like expressions")
 
-            return Binary(Trace(self), "==", expression, Constant(Trace(self), 0))
+            return Binary(
+                Trace(self),
+                "==",
+                expression,
+                Constant(
+                    Trace(self),
+                    0))
 
         elif self.tokens.peek() == "-":
             operator = self.tokens.get()
@@ -1263,9 +1257,8 @@ class Parser:
                     type_specifier.type_)
             elif type_specifier.type_ != expression.type_():
                 self.tokens.error(
-                    "cannot cast incompatible types expected: %s actual: %s" % (
-                        type_specifier.type_,
-                        expression.type_()))
+                    "cannot cast incompatible types expected: %s actual: %s" %
+                    (type_specifier.type_, expression.type_()))
 
             return expression
 
@@ -1362,7 +1355,8 @@ class Parser:
                 instance = self.scope[name]
                 if not hasattr(instance, "local"):
                     self.tokens.error(
-                        "%s is not is not an instance in the current scope" % name)
+                        "%s is not is not an instance in the current scope" %
+                        name)
                 # store inside the current function any globals that get
                 # referenced if a global isn't referenced it doesn't get
                 # compiled
@@ -1576,9 +1570,8 @@ class Parser:
                 # types should match
                 elif required.type_() != actual.type_():
                     self.tokens.error(
-                        "type mismatch in function_argument expected: %s actual: %s" % (
-                            required.type_(),
-                            actual.type_()))
+                        "type mismatch in function_argument expected: %s actual: %s" %
+                        (required.type_(), actual.type_()))
 
             corrected_arguments.append(actual)
         function_call.arguments = corrected_arguments
@@ -1622,7 +1615,7 @@ class Parser:
                 Trace(self),
                 TypeSpecifier(
                     ArrayOf("int",
-                    [len(initializer)]),
+                            [len(initializer)]),
                     False,
                     False),
                 initializer,
@@ -1630,7 +1623,8 @@ class Parser:
             )
             # since we don't return instance, it doesn't get generated.
             # treat as a global
-            self.function.global_variables["const_char_%s" % id(instance)] = instance
+            self.function.global_variables["const_char_%s" % id(
+                instance)] = instance
             self.function.referenced_globals.append(instance)
             return instance.reference(Trace(self))
         except SyntaxError:
@@ -1727,7 +1721,8 @@ class Parser:
             return IntToFloat(Trace(self), expression)
         else:
             self.tokens.error(
-                "cannot convert expression with type %s to float" % expression.type_())
+                "cannot convert expression with type %s to float" %
+                expression.type_())
 
     def to_long(self, expression):
         """Convert (any type which can be converted) to a long"""
@@ -1735,7 +1730,9 @@ class Parser:
         if is_double(expression):
             return DoubleToLong(Trace(self), expression)
         elif is_float(expression):
-            return DoubleToLong(Trace(self), FloatToDouble(Trace(self), expression))
+            return DoubleToLong(
+                Trace(self), FloatToDouble(
+                    Trace(self), expression))
         elif is_long(expression):
             return expression
         elif is_int(expression):
@@ -1749,7 +1746,9 @@ class Parser:
         """Convert (any type which can be converted) to an int"""
 
         if is_double(expression):
-            return LongToInt(Trace(self), DoubleToLong(Trace(self), expression))
+            return LongToInt(
+                Trace(self), DoubleToLong(
+                    Trace(self), expression))
         elif is_float(expression):
             return FloatToInt(Trace(self), expression)
         elif is_long(expression):

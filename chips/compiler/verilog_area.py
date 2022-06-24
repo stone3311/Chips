@@ -105,11 +105,11 @@ def generate_instruction_set(instructions):
 
 
 def generate_declarations(
-    instructions,
-    no_tb_mode,
-    register_bits,
-    opcode_bits,
-    allocator):
+        instructions,
+        no_tb_mode,
+        register_bits,
+        opcode_bits,
+        allocator):
     """Generate verilog declarations"""
 
     # list all inputs and outputs used in the program
@@ -117,8 +117,8 @@ def generate_declarations(
     outputs = list(allocator.output_names.values())
     input_files = set([i["file_name"]
                        for i in instructions if "file_read" == i["op"]])
-    output_files = set([i["file_name"]
-                        for i in instructions if i["op"] in ("file_write", "float_file_write", "long_float_file_write")])
+    output_files = set([i["file_name"] for i in instructions if i["op"] in (
+        "file_write", "float_file_write", "long_float_file_write")])
     testbench = not inputs and not outputs and not no_tb_mode
 
     # Do not generate a port in testbench mode
@@ -266,7 +266,7 @@ def generate_CHIP(input_file,
         opcode_bits,
         allocator)
     inputs, outputs, input_files, output_files, testbench, inports, outports, signals = declarations
-    floating_point_arithmetic, floating_point_conversions, floating_point_debug  = floating_point_enables(
+    floating_point_arithmetic, floating_point_conversions, floating_point_debug = floating_point_enables(
         instruction_set)
 
     # output the code in verilog
@@ -361,7 +361,11 @@ def generate_CHIP(input_file,
             needs_divider = True
 
     needs_long_divider = False
-    for i in ["long_divide", "unsigned_long_divide", "long_modulo", "unsigned_long_modulo"]:
+    for i in [
+        "long_divide",
+        "unsigned_long_divide",
+        "long_modulo",
+            "unsigned_long_modulo"]:
         if i in opcodes:
             states.append(i)
             needs_long_divider = True
@@ -370,10 +374,10 @@ def generate_CHIP(input_file,
         states.append("multiply")
 
     divide_latency = options.get("divide_latency", 32)
-    divide_iterations = 32/divide_latency
+    divide_iterations = 32 / divide_latency
 
     long_divide_latency = options.get("long_divide_latency", 64)
-    long_divide_iterations = 64/long_divide_latency
+    long_divide_iterations = 64 / long_divide_latency
 
     for i in floating_point_arithmetic:
         states.append("%s_write_a" % i)
@@ -397,13 +401,13 @@ def generate_CHIP(input_file,
 
     input_files = dict(
         list(zip(input_files, ["input_file_%s" %
-                          i for i, j in enumerate(input_files)])))
+                               i for i, j in enumerate(input_files)])))
     for i in list(input_files.values()):
         output_file.write("  integer %s;\n" % i)
 
     output_files = dict(
         list(zip(output_files, ["output_file_%s" %
-                           i for i, j in enumerate(output_files)])))
+                                i for i, j in enumerate(output_files)])))
     for i in list(output_files.values()):
         output_file.write("  integer %s;\n" % i)
 
@@ -432,7 +436,7 @@ def generate_CHIP(input_file,
     output_file.write(
         "  reg [%s:0] instructions [%i:0];\n" %
         (instruction_bits - 1, len(instructions) - 1))
-    output_file.write("  reg [31:0] memory [%i:0];\n" % (memory_size-1))
+    output_file.write("  reg [31:0] memory [%i:0];\n" % (memory_size - 1))
     output_file.write("  reg [31:0] registers [15:0];\n")
     output_file.write("  wire [31:0] operand_a;\n")
     output_file.write("  wire [31:0] operand_b;\n")
@@ -451,30 +455,30 @@ def generate_CHIP(input_file,
     output_file.write("  wire  forward_b;\n")
 
     if needs_divider:
-      output_file.write("  reg [31:0] shifter;\n")
-      output_file.write("  reg [32:0] difference;\n")
-      output_file.write("  reg [31:0] divisor;\n")
-      output_file.write("  reg [31:0] dividend;\n")
-      output_file.write("  reg [31:0] quotient;\n")
-      output_file.write("  reg [31:0] remainder;\n")
-      output_file.write("  reg quotient_sign;\n")
-      output_file.write("  reg dividend_sign;\n")
+        output_file.write("  reg [31:0] shifter;\n")
+        output_file.write("  reg [32:0] difference;\n")
+        output_file.write("  reg [31:0] divisor;\n")
+        output_file.write("  reg [31:0] dividend;\n")
+        output_file.write("  reg [31:0] quotient;\n")
+        output_file.write("  reg [31:0] remainder;\n")
+        output_file.write("  reg quotient_sign;\n")
+        output_file.write("  reg dividend_sign;\n")
 
     if needs_long_divider:
-      output_file.write("  reg [63:0] long_shifter;\n")
-      output_file.write("  reg [64:0] long_difference;\n")
-      output_file.write("  reg [63:0] long_divisor;\n")
-      output_file.write("  reg [63:0] long_dividend;\n")
-      output_file.write("  reg [63:0] long_quotient;\n")
-      output_file.write("  reg [63:0] long_remainder;\n")
-      output_file.write("  reg long_quotient_sign;\n")
-      output_file.write("  reg long_dividend_sign;\n")
+        output_file.write("  reg [63:0] long_shifter;\n")
+        output_file.write("  reg [64:0] long_difference;\n")
+        output_file.write("  reg [63:0] long_divisor;\n")
+        output_file.write("  reg [63:0] long_dividend;\n")
+        output_file.write("  reg [63:0] long_quotient;\n")
+        output_file.write("  reg [63:0] long_remainder;\n")
+        output_file.write("  reg long_quotient_sign;\n")
+        output_file.write("  reg long_dividend_sign;\n")
 
     if "multiply" in opcodes:
-      output_file.write("  reg [31:0] product_a;\n")
-      output_file.write("  reg [31:0] product_b;\n")
-      output_file.write("  reg [31:0] product_c;\n")
-      output_file.write("  reg [31:0] product_d;\n")
+        output_file.write("  reg [31:0] product_a;\n")
+        output_file.write("  reg [31:0] product_b;\n")
+        output_file.write("  reg [31:0] product_c;\n")
+        output_file.write("  reg [31:0] product_d;\n")
 
     # generate clock and reset in testbench mode
     if testbench:
@@ -554,21 +558,29 @@ def generate_CHIP(input_file,
             output_file.write("  );\n")
 
      # Generate a state machine to execute the instructions
-    #if initialize_memory and allocator.memory_content:
+    # if initialize_memory and allocator.memory_content:
 #
-    output_file.write("\n  //////////////////////////////////////////////////////////////////////////////\n")
-    output_file.write("  // MEMORY INITIALIZATION                                                      \n")
-    output_file.write("  //                                                                            \n")
-    output_file.write("  // In order to reduce program size, array contents have been stored into      \n")
-    output_file.write("  // memory at initialization. In an FPGA, this will result in the memory being \n")
-    output_file.write("  // initialized when the FPGA configures.                                      \n")
-    output_file.write("  // Memory will not be re-initialized at reset.                                \n")
-    output_file.write("  // Dissable this behaviour using the no_initialize_memory switch              \n")
+    output_file.write(
+        "\n  //////////////////////////////////////////////////////////////////////////////\n")
+    output_file.write(
+        "  // MEMORY INITIALIZATION                                                      \n")
+    output_file.write(
+        "  //                                                                            \n")
+    output_file.write(
+        "  // In order to reduce program size, array contents have been stored into      \n")
+    output_file.write(
+        "  // memory at initialization. In an FPGA, this will result in the memory being \n")
+    output_file.write(
+        "  // initialized when the FPGA configures.                                      \n")
+    output_file.write(
+        "  // Memory will not be re-initialized at reset.                                \n")
+    output_file.write(
+        "  // Dissable this behaviour using the no_initialize_memory switch              \n")
 #
     output_file.write("  \n  initial\n")
     output_file.write("  begin\n")
     for location, content in initial_memory_contents.items():
-        output_file.write("    memory[%s] = %s;\n"%(location, content))
+        output_file.write("    memory[%s] = %s;\n" % (location, content))
     output_file.write("  end\n\n")
     output_file.write(
         "\n  //////////////////////////////////////////////////////////////////////////////\n")
@@ -595,7 +607,7 @@ def generate_CHIP(input_file,
             print_verilog_literal(4, instruction.get("z", 0)),
             print_verilog_literal(4, instruction.get("a", 0)),
             print_verilog_literal(
-            16, instruction["literal"] | instruction.get("b", 0)),
+                16, instruction["literal"] | instruction.get("b", 0)),
             instruction["filename"],
             instruction["lineno"],
             instruction["comment"],
@@ -629,7 +641,9 @@ def generate_CHIP(input_file,
     output_file.write("  begin\n")
     output_file.write("    load_data <= memory[load_address];\n")
     output_file.write("    if(store_enable && state == execute) begin\n")
-    output_file.write("      if (store_address > %i) begin\n"%(memory_size-1))
+    output_file.write(
+        "      if (store_address > %i) begin\n" %
+        (memory_size - 1))
     output_file.write("        $display(\"!!!!stack overflow!!!!\");\n")
     output_file.write("        $finish_and_return(1);\n")
     output_file.write("        exception <= 1'b1;\n")
@@ -662,8 +676,10 @@ def generate_CHIP(input_file,
     output_file.write("  assign address_a = instruction[19:16];\n")
     output_file.write("  assign address_b = instruction[3:0];\n")
     output_file.write("  assign literal   = instruction[15:0];\n")
-    output_file.write("  assign forward_a = (address_a_2 == address_z_3 && write_enable);\n")
-    output_file.write("  assign forward_b = (address_b_2 == address_z_3 && write_enable);\n")
+    output_file.write(
+        "  assign forward_a = (address_a_2 == address_z_3 && write_enable);\n")
+    output_file.write(
+        "  assign forward_b = (address_b_2 == address_z_3 && write_enable);\n")
 
     output_file.write(
         "\n  //////////////////////////////////////////////////////////////////////////////\n")
@@ -855,22 +871,27 @@ def generate_CHIP(input_file,
 
         elif instruction["op"] == "multiply":
 
-            output_file.write("          product_a <= operand_a[15:0]  * operand_b[15:0];\n")
-            output_file.write("          product_b <= operand_a[15:0]  * operand_b[31:16];\n")
-            output_file.write("          product_c <= operand_a[31:16] * operand_b[15:0];\n")
-            output_file.write("          product_d <= operand_a[31:16] * operand_b[31:16];\n")
+            output_file.write(
+                "          product_a <= operand_a[15:0]  * operand_b[15:0];\n")
+            output_file.write(
+                "          product_b <= operand_a[15:0]  * operand_b[31:16];\n")
+            output_file.write(
+                "          product_c <= operand_a[31:16] * operand_b[15:0];\n")
+            output_file.write(
+                "          product_d <= operand_a[31:16] * operand_b[31:16];\n")
             output_file.write("          state <= multiply;\n")
 
         elif instruction["op"] == "unsigned_divide":
             output_file.write("          dividend  <= operand_a;\n")
             output_file.write("          divisor <= operand_b;\n")
-            output_file.write("          timer <= %i;\n"%divide_latency)
+            output_file.write("          timer <= %i;\n" % divide_latency)
             output_file.write("          remainder <= 0;\n")
             output_file.write("          quotient  <= 0;\n")
             output_file.write("          state <= unsigned_divide;\n")
 
         elif instruction["op"] == "divide":
-            output_file.write("          quotient_sign <= operand_a[31] ^ operand_b[31];\n")
+            output_file.write(
+                "          quotient_sign <= operand_a[31] ^ operand_b[31];\n")
             output_file.write("          dividend  <= operand_a;\n")
             output_file.write("          divisor <= operand_b;\n")
             output_file.write("          if (operand_a[31]) begin\n")
@@ -879,7 +900,7 @@ def generate_CHIP(input_file,
             output_file.write("          if (operand_b[31]) begin\n")
             output_file.write("            divisor <= -operand_b;\n")
             output_file.write("          end\n")
-            output_file.write("          timer <= %i;\n"%divide_latency)
+            output_file.write("          timer <= %i;\n" % divide_latency)
             output_file.write("          remainder <= 0;\n")
             output_file.write("          quotient <= 0;\n")
             output_file.write("          state <= divide;\n")
@@ -887,7 +908,7 @@ def generate_CHIP(input_file,
         elif instruction["op"] == "unsigned_modulo":
             output_file.write("          dividend  <= operand_a;\n")
             output_file.write("          divisor <= operand_b;\n")
-            output_file.write("          timer <= %i;\n"%divide_latency)
+            output_file.write("          timer <= %i;\n" % divide_latency)
             output_file.write("          remainder <= 0;\n")
             output_file.write("          quotient  <= 0;\n")
             output_file.write("          state <= unsigned_modulo;\n")
@@ -902,7 +923,7 @@ def generate_CHIP(input_file,
             output_file.write("          if (operand_b[31]) begin\n")
             output_file.write("            divisor <= -operand_b;\n")
             output_file.write("          end\n")
-            output_file.write("          timer <= %i;\n"%divide_latency)
+            output_file.write("          timer <= %i;\n" % divide_latency)
             output_file.write("          remainder <= 0;\n")
             output_file.write("          quotient <= 0;\n")
             output_file.write("          state <= modulo;\n")
@@ -910,13 +931,14 @@ def generate_CHIP(input_file,
         elif instruction["op"] == "unsigned_long_divide":
             output_file.write("          long_dividend <= {a_hi, a_lo};\n")
             output_file.write("          long_divisor <= {b_hi, b_lo};\n")
-            output_file.write("          timer <= %i;\n"%long_divide_latency)
+            output_file.write("          timer <= %i;\n" % long_divide_latency)
             output_file.write("          long_remainder <= 0;\n")
             output_file.write("          long_quotient  <= 0;\n")
             output_file.write("          state <= unsigned_long_divide;\n")
 
         elif instruction["op"] == "long_divide":
-            output_file.write("          long_quotient_sign <= a_hi[31] ^ b_hi[31];\n")
+            output_file.write(
+                "          long_quotient_sign <= a_hi[31] ^ b_hi[31];\n")
             output_file.write("          long_dividend <= {a_hi, a_lo};\n")
             output_file.write("          long_divisor <= {b_hi, b_lo};\n")
             output_file.write("          if (a_hi[31]) begin\n")
@@ -925,7 +947,7 @@ def generate_CHIP(input_file,
             output_file.write("          if (b_hi[31]) begin\n")
             output_file.write("            long_divisor <= -{b_hi, b_lo};\n")
             output_file.write("          end\n")
-            output_file.write("          timer <= %i;\n"%long_divide_latency)
+            output_file.write("          timer <= %i;\n" % long_divide_latency)
             output_file.write("          long_remainder <= 0;\n")
             output_file.write("          long_quotient <= 0;\n")
             output_file.write("          state <= long_divide;\n")
@@ -933,7 +955,7 @@ def generate_CHIP(input_file,
         elif instruction["op"] == "unsigned_long_modulo":
             output_file.write("          long_dividend <= {a_hi, a_lo};\n")
             output_file.write("          long_divisor <= {b_hi, b_lo};\n")
-            output_file.write("          timer <= %i;\n"%long_divide_latency)
+            output_file.write("          timer <= %i;\n" % long_divide_latency)
             output_file.write("          long_remainder <= 0;\n")
             output_file.write("          long_quotient  <= 0;\n")
             output_file.write("          state <= unsigned_long_modulo;\n")
@@ -948,7 +970,7 @@ def generate_CHIP(input_file,
             output_file.write("          if (b_hi[31]) begin\n")
             output_file.write("            long_divisor <= -{b_hi, b_lo};\n")
             output_file.write("          end\n")
-            output_file.write("          timer <= %i;\n"%long_divide_latency)
+            output_file.write("          timer <= %i;\n" % long_divide_latency)
             output_file.write("          long_remainder <= 0;\n")
             output_file.write("          long_quotient <= 0;\n")
             output_file.write("          state <= long_modulo;\n")
@@ -1070,7 +1092,6 @@ def generate_CHIP(input_file,
             output_file.write("          multiplier_b <= operand_b;\n")
             output_file.write("          state <= multiplier_write_a;\n")
 
-
         elif instruction["op"] == "float_divide":
             output_file.write("          divider_a_stb <= 1;\n")
             output_file.write("          divider_a <= operand_a;\n")
@@ -1142,15 +1163,13 @@ def generate_CHIP(input_file,
             output_file.write(
                 '          fp_value = $bitstoreal(long_result);\n')
             output_file.write('          $fdisplay (%s, "%%g", fp_value);\n' % (
-                              output_files[
-                              instruction["file_name"]]))
+                output_files[instruction["file_name"]]))
 
         elif instruction["op"] == "long_float_file_write":
             output_file.write(
                 '          fp_value = $bitstoreal({a_hi, a_lo});\n')
             output_file.write('          $fdisplay (%s, "%%g", fp_value);\n' % (
-                              output_files[
-                              instruction["file_name"]]))
+                output_files[instruction["file_name"]]))
 
         elif instruction["op"] == "unsigned_file_write":
             output_file.write("          $fdisplay (%s, \"%%d\", $unsigned(operand_a));\n" % (
@@ -1197,9 +1216,9 @@ def generate_CHIP(input_file,
 
         elif instruction["op"] == "assert":
             output_file.write("          if (operand_a == 0) begin\n")
-            output_file.write("            $display(\"Assertion failed at line: %s in file: %s\");\n" % (
-                              instruction["line"],
-                              instruction["file"]))
+            output_file.write(
+                "            $display(\"Assertion failed at line: %s in file: %s\");\n" %
+                (instruction["line"], instruction["file"]))
             output_file.write("            $finish_and_return(1);\n")
             output_file.write("          end\n")
 
@@ -1216,14 +1235,14 @@ def generate_CHIP(input_file,
             output_file.write("          write_enable <= 1;\n")
 
         elif instruction["op"] == "report":
-            output_file.write('          $display ("%%d (report (int) at line: %s in file: %s)", $signed(a_lo));\n' % (
-                instruction["line"],
-                instruction["file"],))
+            output_file.write(
+                '          $display ("%%d (report (int) at line: %s in file: %s)", $signed(a_lo));\n' %
+                (instruction["line"], instruction["file"],))
 
         elif instruction["op"] == "long_report":
-            output_file.write('          $display ("%%d (report (long) at line: %s in file: %s)", $signed({a_hi, a_lo}));\n' % (
-                instruction["line"],
-                instruction["file"],))
+            output_file.write(
+                '          $display ("%%d (report (long) at line: %s in file: %s)", $signed({a_hi, a_lo}));\n' %
+                (instruction["line"], instruction["file"],))
 
         elif instruction["op"] == "float_report":
             output_file.write('          long_result[63] = a_lo[31];\n')
@@ -1240,26 +1259,26 @@ def generate_CHIP(input_file,
             output_file.write('          long_result[28:0] = 0;\n')
             output_file.write(
                 '          fp_value = $bitstoreal(long_result);\n')
-            output_file.write('          $display ("%%f (report (float) at line: %s in file: %s)", fp_value);\n' % (
-                              instruction["line"],
-                              instruction["file"]))
+            output_file.write(
+                '          $display ("%%f (report (float) at line: %s in file: %s)", fp_value);\n' %
+                (instruction["line"], instruction["file"]))
 
         elif instruction["op"] == "long_float_report":
             output_file.write(
                 '          fp_value = $bitstoreal({a_hi, a_lo});\n')
-            output_file.write('          $display ("%%f (report (double) at line: %s in file: %s)", fp_value);\n' % (
-                              instruction["line"],
-                              instruction["file"]))
+            output_file.write(
+                '          $display ("%%f (report (double) at line: %s in file: %s)", fp_value);\n' %
+                (instruction["line"], instruction["file"]))
 
         elif instruction["op"] == "unsigned_report":
-            output_file.write('          $display ("%%d (report (unsigned) at line: %s in file: %s)", $unsigned(a_lo));\n' % (
-                instruction["line"],
-                instruction["file"]))
+            output_file.write(
+                '          $display ("%%d (report (unsigned) at line: %s in file: %s)", $unsigned(a_lo));\n' %
+                (instruction["line"], instruction["file"]))
 
         elif instruction["op"] == "long_unsigned_report":
-            output_file.write('          $display ("%%d (report (unsigned long) at line: %s in file: %s)", $unsigned({a_hi, a_lo}));\n' % (
-                instruction["line"],
-                instruction["file"]))
+            output_file.write(
+                '          $display ("%%d (report (unsigned long) at line: %s in file: %s)", $unsigned({a_hi, a_lo}));\n' %
+                (instruction["line"], instruction["file"]))
 
         elif instruction["op"] == "stop":
             # If we are in testbench mode stop the simulation
@@ -1280,7 +1299,6 @@ def generate_CHIP(input_file,
         output_file.write("        end\n\n")
     output_file.write("      endcase\n\n")
     output_file.write("    end\n\n")
-
 
     if "multiply" in opcodes:
         output_file.write("    multiply:\n")
@@ -1423,9 +1441,9 @@ def generate_CHIP(input_file,
             output_file.write("      %s:\n" % (handle))
             output_file.write("      begin\n")
             output_file.write("        s_input_%s_ack <= 1;\n" % input_name)
-            output_file.write("        if (s_input_%s_ack && input_%s_stb) begin\n" % (
-                              input_name,
-                              input_name))
+            output_file.write(
+                "        if (s_input_%s_ack && input_%s_stb) begin\n" %
+                (input_name, input_name))
             output_file.write("          result <= input_%s;\n" % input_name)
             output_file.write("          write_enable <= 1;\n")
             output_file.write("          s_input_%s_ack <= 0;\n" % input_name)
@@ -1446,9 +1464,9 @@ def generate_CHIP(input_file,
             output_file.write(
                 "        s_output_%s <= write_value;\n" %
                 output_name)
-            output_file.write("        if (output_%s_ack && s_output_%s_stb) begin\n" % (
-                              output_name,
-                              output_name))
+            output_file.write(
+                "        if (output_%s_ack && s_output_%s_stb) begin\n" %
+                (output_name, output_name))
             output_file.write(
                 "          s_output_%s_stb <= 0;\n" %
                 output_name)
@@ -1528,7 +1546,8 @@ def generate_CHIP(input_file,
             "       if (%s_out_stb && %s_out_ack) begin\n" %
             (i, i))
         output_file.write("         %s_out_ack <= 0;\n" % i)
-        if (i.startswith("double") and not i.endswith("float")) or i.endswith("double") or i.startswith("long"):
+        if (i.startswith("double") and not i.endswith("float")
+                ) or i.endswith("double") or i.startswith("long"):
             output_file.write("         a_lo <= %s_out[31:0];\n" % i)
             output_file.write("         a_hi <= %s_out[63:32];\n" % i)
         else:
@@ -1540,7 +1559,7 @@ def generate_CHIP(input_file,
 
     if needs_divider:
         output_file.write("    //divider kernel logic\n")
-        output_file.write("    repeat (%u) begin\n"%(divide_iterations))
+        output_file.write("    repeat (%u) begin\n" % (divide_iterations))
         output_file.write("      shifter = {remainder[30:0], dividend[31]};\n")
         output_file.write("      difference = shifter - divisor;\n")
         output_file.write("      dividend = dividend << 1;\n")
@@ -1555,9 +1574,11 @@ def generate_CHIP(input_file,
 
     if needs_long_divider:
         output_file.write("    //long divider kernel logic\n")
-        output_file.write("    repeat (%u) begin\n"%(divide_iterations))
-        output_file.write("      long_shifter = {long_remainder[62:0], long_dividend[63]};\n")
-        output_file.write("      long_difference = long_shifter - long_divisor;\n")
+        output_file.write("    repeat (%u) begin\n" % (divide_iterations))
+        output_file.write(
+            "      long_shifter = {long_remainder[62:0], long_dividend[63]};\n")
+        output_file.write(
+            "      long_difference = long_shifter - long_divisor;\n")
         output_file.write("      long_dividend = long_dividend << 1;\n")
         output_file.write("      if (long_difference[64]) begin\n")
         output_file.write("        long_remainder = long_shifter;\n")

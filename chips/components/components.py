@@ -193,8 +193,8 @@ def report_all(chip, stream, type_="int"):
 def tee(chip, a, out1=None, out2=None):
 
     verilog_file = """
-        module {name} (clk,rst,exception, 
-            input_in, 
+        module {name} (clk,rst,exception,
+            input_in,
             input_in_stb,
             input_in_ack,
             output_out1,
@@ -271,9 +271,9 @@ def tee(chip, a, out1=None, out2=None):
                 fputc(data, out1);
                 fputc(data, out2);
             }
-        }""", 
-        V_file=verilog_file,
-        inline=True)
+        }""",
+                                     V_file=verilog_file,
+                                     inline=True)
 
     if out1 is None:
         out1 = Wire(chip)
@@ -447,9 +447,7 @@ def line_arbiter(chip, streams, out=None):
                 }
 
             }
-        """,
-
-        V_file="""module {name}(input_in1,input_in2,input_in1_stb,input_in2_stb,
+        """, V_file="""module {name}(input_in1,input_in2,input_in1_stb,input_in2_stb,
           output_out_ack,clk,rst,output_out,output_out_stb,input_in1_ack,input_in2_ack,exception);
           parameter
           arbitrate_0 = 3'd0,
@@ -561,10 +559,7 @@ def line_arbiter(chip, streams, out=None):
           assign output_out = s_output_out;
           assign exception = 0;
 
-        endmodule""",
-
-        inline=True
-    )
+        endmodule""", inline=True)
 
     tree_combine(chip, arbiter_component, streams, out)
     return out
@@ -593,7 +588,6 @@ def arbiter(chip, streams, out=None):
         out = Wire(chip)
 
     arbiter_component = VerilogComponent(
-
         C_file="""
         int out = output("out");
         int in1 = input("in1");
@@ -603,9 +597,7 @@ def arbiter(chip, streams, out=None):
                 if(ready(in1)) fputc(fgetc(in1), out);
                 if(ready(in2)) fputc(fgetc(in2), out);
             }
-        }""",
-
-        V_file="""module {name}(input_in1,input_in2,input_in1_stb,input_in2_stb,
+        }""", V_file="""module {name}(input_in1,input_in2,input_in1_stb,input_in2_stb,
           output_out_ack,clk,rst,output_out,output_out_stb,input_in1_ack,input_in2_ack,exception);
           parameter
           arbitrate_0 = 3'd0,
@@ -709,10 +701,7 @@ def arbiter(chip, streams, out=None):
           assign output_out = s_output_out;
           assign exception = 0;
 
-        endmodule""",
-
-        inline=True
-    )
+        endmodule""", inline=True)
 
     tree_combine(chip, arbiter_component, streams, out)
     return out
@@ -828,6 +817,7 @@ def tree_combine(chip, component, args, out):
                 "in2": children.pop(0)},
         outputs={"out": out},
         parameters={})
+
 
 if __name__ == "__main__":
     from chips.api.api import Chip
@@ -1063,7 +1053,8 @@ if __name__ == "__main__":
         ],
     }
 
-    for f, fname in zip([eq, ne, gt, ge, lt, le], ["eq", "ne", "gt", "ge", "lt", "le"]):
+    for f, fname in zip([eq, ne, gt, ge, lt, le], [
+                        "eq", "ne", "gt", "ge", "lt", "le"]):
         for type_ in ["float", "double", "int", "long"]:
 
             a, b, c = test_vectors[fname]

@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from chips.api.api import *
 
 try:
     from PIL import Image
 except ImportError:
-    print "You need Python Imaging Library to run this script!"
+    print("You need Python Imaging Library to run this script!")
     exit(0)
 
 def test():
@@ -12,7 +12,7 @@ def test():
     im = Image.open("test.bmp")
     image_data = list(im.getdata())
     width, height = im.size
-    print width, height
+    print(width, height)
     
     chip = Chip("edge_detection")
     image_in = Stimulus(chip, "image_in", "int", image_data)

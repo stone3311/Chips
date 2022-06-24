@@ -99,16 +99,17 @@ class Debugger(wx.Frame):
 
     def report_memory_usage(self, event):
         report = GuiReport(self, "memory usage report")
-        report.report("memory usage report for %s\n"%self.chip.name, 0)
+        report.report("memory usage report for %s\n" % self.chip.name, 0)
         report.report("data memory:", 0)
         for instance in self.chip.instances:
-            report_line = "%20s : %4u KiB + %4u bytes (%4u 32 bit words)"%(
+            report_line = "%20s : %4u KiB + %4u bytes (%4u 32 bit words)" % (
                 instance.component_name,
-                (instance.model.max_stack*4) // 1024,
-                (instance.model.max_stack*4) % 1024,
+                (instance.model.max_stack * 4) // 1024,
+                (instance.model.max_stack * 4) % 1024,
                 instance.model.max_stack,
             )
             report.report(report_line, 0)
+
 
 if __name__ == "__main__":
     from chips.components.components import *

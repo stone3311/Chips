@@ -17,16 +17,18 @@ import chips.compiler.profiler as profiler
 from chips.compiler.exceptions import StopSim, BreakSim
 from chips_c import bits_to_float, bits_to_double
 
+
 class GuiReport(wx.Frame):
 
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title, size=(1024,768))
+        wx.Frame.__init__(self, parent, title=title, size=(1024, 768))
         self.parent = parent
 
         panel = wx.Panel(self, -1)
         vsizer = wx.BoxSizer(wx.VERTICAL)
 
-        report_window = wx.TextCtrl(panel,  -1, style=wx.TE_MULTILINE|wx.TE_RICH)
+        report_window = wx.TextCtrl(
+            panel, -1, style=wx.TE_MULTILINE | wx.TE_RICH)
         font1 = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, False)
         report_window.SetFont(font1)
         report_window.SetEditable(False)
@@ -35,7 +37,7 @@ class GuiReport(wx.Frame):
         vsizer.Add(report_window, 1, wx.EXPAND)
         panel.SetSizer(vsizer)
 
-        sizer=wx.BoxSizer(wx.HORIZONTAL)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(panel, 1, wx.EXPAND)
         self.SetSizer(sizer)
 
@@ -51,9 +53,9 @@ class GuiReport(wx.Frame):
 
 
 if __name__ == "__main__":
-        app = wx.App()
-        g = GuiReport(None, "profile")
-        g.report("blah", 0.5)
-        g.report("blah blah", 1)
-        
-        app.MainLoop()
+    app = wx.App()
+    g = GuiReport(None, "profile")
+    g.report("blah", 0.5)
+    g.report("blah blah", 1)
+
+    app.MainLoop()

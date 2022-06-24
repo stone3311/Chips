@@ -1,5 +1,5 @@
 examples = {
-    "Fast Fourier Transform" : """
+    "Fast Fourier Transform": """
 /* fft.c */
 /* Jonathan P Dawson */
 /* 2013-12-23 */
@@ -127,7 +127,7 @@ void main(){
 }
 """,
 
-    "Taylor Series" : """
+    "Taylor Series": """
 /* taylor.c */
 /* Jonathan P Dawson */
 /* 2013-12-23 */
@@ -205,7 +205,7 @@ void main(){
 }
 """,
 
-    "Square Root" : """
+    "Square Root": """
 /* sqrt.c */
 /* Jonathan P Dawson */
 /* 2013-12-23 */
@@ -235,7 +235,7 @@ void main(){
     }
 }""",
 
-    "Edge Detection" : """
+    "Edge Detection": """
 /*Edge Detection*/
 /*Jonathan P Dawson 2014-07-06*/
 
@@ -383,7 +383,7 @@ void main()
 }
 """,
 
-    "LZSS Compress" : """
+    "LZSS Compress": """
 /*LZSS Compression Component*/
 /*Jonathan P Dawson 2014-07.10*/
 
@@ -469,7 +469,7 @@ void main(){
 }
 """,
 
-    "LZSS Decompress" : """
+    "LZSS Decompress": """
 /*LZSS Decompression Component*/
 /* Jonathan P Dawson 2014-07-10*/
 

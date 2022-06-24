@@ -20,9 +20,9 @@ class BlockDiagram():
                 sources[str(id(wire))] = str(id(instance)) + ":" + port
 
             inputs = "|".join(["<%s> %s" % (i, i)
-                              for i in list(instance.inputs.keys())])
+                               for i in list(instance.inputs.keys())])
             outputs = "|".join(["<%s> %s" % (i, i)
-                               for i in list(instance.outputs.keys())])
+                                for i in list(instance.outputs.keys())])
             label = "{{%s}|%s|{%s}}" % (
                 inputs,
                 instance.component_name,

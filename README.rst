@@ -53,12 +53,12 @@ A quick example
                     while(shifter != 0x80){
                         fputc(shifter, leds);
                         shifter <<= 1;
-                        wait_clocks(5000000);
+                        wait_clocks(5000);
                     }
                     while(shifter != 0x01){
                         fputc(shifter, leds);
                         shifter >>= 1;
-                        wait_clocks(5000000);
+                        wait_clocks(5000);
                     }
                 }
             }
@@ -80,7 +80,7 @@ A quick example
             chip.simulation_step()
 
         #check the results
-        print list(scanner_output)
+        print(list(scanner_output))
 
 ..        
 

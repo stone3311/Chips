@@ -4,7 +4,7 @@ from setuptools import setup, Extension
 long_description = open("README.rst").read()
 
 setup(name="Chips-python",
-      version="2.2.1",
+      version="2.2.2",
       description="Design hardware with Python",
       long_description=long_description,
 

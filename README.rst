@@ -3,7 +3,7 @@
 .. image:: https://github.com/benfre/Chips/actions/workflows/pages/pages-build-deployment/badge.svg
   :alt: github pages badge
 
-Chips - 2.0
+Chips
 ===========
 
 *Chips* is a high level, FPGA design tool inspired by *Python*.

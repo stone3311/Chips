@@ -5,7 +5,6 @@ jobs:
     name: Build source distribution and wheel
     runs-on: ubuntu-latest
     steps:
-    steps:
       - uses: actions/checkout@v3
 
       # Used to host cibuildwheel

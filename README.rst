@@ -144,13 +144,13 @@ Install from github
 ::
 
         $ git clone --recursive https://github.com/benfre/Chips.git
-        $ cd Chips-2.0
-        $ sudo python setup install
+        $ cd Chips
+        $ sudo python3 setup.py install
 
 Install from PyPi
 -----------------
 
 ::
 
-        $ pip-install chips-python
+        $ pip3 install chips-python
 

@@ -1,18 +1,18 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 from distutils.core import setup, Extension
 version = open("version").read()
 long_description = open("README.rst").read()
 
-setup(name="Chips",
+setup(name="Chips-python",
       version=version,
       description="Design hardware with Python",
       long_description=long_description,
 
       author="Jon Dawson",
       author_email="chips@jondawson.org.uk",
-      url="http://pyandchips.org",
-      download_url="http://github.com/idawsonjon/Chips-2.0",
+      url="http://benfre.github.io/Chips/",
+      download_url="http://github.com/benfre/Chips",
       keywords=["Verilog", "FPGA", "C", "HDL", "Synthesis", "VHDL"],
       install_requires=["numpy"],
       ext_modules = [

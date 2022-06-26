@@ -1,7 +1,7 @@
-.. image:: https://travis-ci.org/dawsonjon/Chips-2.0.svg?branch=master
-    :target: https://travis-ci.org/dawsonjon/Chips-2.0`
-.. image:: https://readthedocs.org/projects/chips-20/badge/?version=latest
-    :target: https://readthedocs.org/projects/chips-20/badge/?version=latest
+.. image:: https://github.com/benfre/Chips/actions/workflows/python_build.yml/badge.svg
+  :alt: python build badge
+.. image:: https://github.com/benfre/Chips/actions/workflows/pages/pages-build-deployment/badge.svg
+  :alt: github pages badge
 
 Chips - 2.0
 ===========
@@ -143,7 +143,7 @@ Install from github
 
 ::
 
-        $ git clone --recursive https://github.com/dawsonjon/Chips-2.0.git
+        $ git clone --recursive https://github.com/benfre/Chips.git
         $ cd Chips-2.0
         $ sudo python setup install
 
@@ -152,5 +152,5 @@ Install from PyPi
 
 ::
 
-        $ pip-install chips
+        $ pip-install chips-python
 

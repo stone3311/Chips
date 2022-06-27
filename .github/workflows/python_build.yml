@@ -2,8 +2,11 @@ name: Python Build
 on: [push]
 jobs:
   build_wheels:
-    name: Build source distribution and wheel
-    runs-on: ubuntu-latest
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2019]
     steps:
       - uses: actions/checkout@v3
 

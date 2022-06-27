@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os.path
 
 divider = open(os.path.join("fpu", "divider", "divider.v")).read()

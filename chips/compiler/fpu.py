@@ -98,14 +98,14 @@ module divider(
 
       special_cases:
       begin
-        //if a is NaN or b is NaN return NaN
+        //if a is NaN or b is NaN return NaN 
         if ((a_e == 128 && a_m != 0) || (b_e == 128 && b_m != 0)) begin
           z[31] <= 1;
           z[30:23] <= 255;
           z[22] <= 1;
           z[21:0] <= 0;
           state <= put_z;
-          //if a is inf and b is inf return NaN
+          //if a is inf and b is inf return NaN 
         end else if ((a_e == 128) && (b_e == 128)) begin
           z[31] <= 1;
           z[30:23] <= 255;
@@ -371,7 +371,7 @@ module multiplier(
   reg       [9:0] a_e, b_e, z_e;
   reg       a_s, b_s, z_s;
   reg       guard, round_bit, sticky;
-  reg       [49:0] product;
+  reg       [47:0] product;
 
   always @(posedge clk)
   begin
@@ -411,7 +411,7 @@ module multiplier(
 
       special_cases:
       begin
-        //if a is NaN or b is NaN return NaN
+        //if a is NaN or b is NaN return NaN 
         if ((a_e == 128 && a_m != 0) || (b_e == 128 && b_m != 0)) begin
           z[31] <= 1;
           z[30:23] <= 255;
@@ -497,16 +497,16 @@ module multiplier(
       begin
         z_s <= a_s ^ b_s;
         z_e <= a_e + b_e + 1;
-        product <= a_m * b_m * 4;
+        product <= a_m * b_m;
         state <= multiply_1;
       end
 
       multiply_1:
       begin
-        z_m <= product[49:26];
-        guard <= product[25];
-        round_bit <= product[24];
-        sticky <= (product[23:0] != 0);
+        z_m <= product[47:24];
+        guard <= product[23];
+        round_bit <= product[22];
+        sticky <= (product[21:0] != 0);
         state <= normalise_1;
       end
 
@@ -689,7 +689,7 @@ module adder(
 
       special_cases:
       begin
-        //if a is NaN or b is NaN return NaN
+        //if a is NaN or b is NaN return NaN 
         if ((a_e == 128 && a_m != 0) || (b_e == 128 && b_m != 0)) begin
           z[31] <= 1;
           z[30:23] <= 255;
@@ -844,6 +844,9 @@ module adder(
         z[31] <= z_s;
         if ($signed(z_e) == -126 && z_m[23] == 0) begin
           z[30 : 23] <= 0;
+        end
+        if ($signed(z_e) == -126 && z_m[23:0] == 24'h0) begin
+          z[31] <= 1'b0; // FIX SIGN BUG: -a + a = +0.
         end
         //if overflow occurs, return inf
         if ($signed(z_e) > 127) begin
@@ -1241,14 +1244,14 @@ module double_divider(
 
       special_cases:
       begin
-        //if a is NaN or b is NaN return NaN
+        //if a is NaN or b is NaN return NaN 
         if ((a_e == 1024 && a_m != 0) || (b_e == 1024 && b_m != 0)) begin
           z[63] <= 1;
           z[62:52] <= 2047;
           z[51] <= 1;
           z[50:0] <= 0;
           state <= put_z;
-          //if a is inf and b is inf return NaN
+          //if a is inf and b is inf return NaN 
         end else if ((a_e == 1024) && (b_e == 1024)) begin
           z[63] <= 1;
           z[62:52] <= 2047;
@@ -1514,7 +1517,7 @@ module double_multiplier(
   reg       [12:0] a_e, b_e, z_e;
   reg       a_s, b_s, z_s;
   reg       guard, round_bit, sticky;
-  reg       [107:0] product;
+  reg       [105:0] product;
 
   always @(posedge clk)
   begin
@@ -1554,7 +1557,7 @@ module double_multiplier(
 
       special_cases:
       begin
-        //if a is NaN or b is NaN return NaN
+        //if a is NaN or b is NaN return NaN 
         if ((a_e == 1024 && a_m != 0) || (b_e == 1024 && b_m != 0)) begin
           z[63] <= 1;
           z[62:52] <= 2047;
@@ -1642,16 +1645,16 @@ module double_multiplier(
       begin
         z_s <= a_s ^ b_s;
         z_e <= a_e + b_e + 1;
-        product <= a_m * b_m * 4;
+        product <= a_m * b_m;
         state <= multiply_1;
       end
 
       multiply_1:
       begin
-        z_m <= product[107:55];
-        guard <= product[54];
-        round_bit <= product[53];
-        sticky <= (product[52:0] != 0);
+        z_m <= product[105:53];
+        guard <= product[52];
+        round_bit <= product[51];
+        sticky <= (product[50:0] != 0);
         state <= normalise_1;
       end
 
@@ -1685,7 +1688,7 @@ module double_multiplier(
       begin
         if (guard && (round_bit | sticky | z_m[0])) begin
           z_m <= z_m + 1;
-          if (z_m == 53'hffffff) begin
+          if (z_m == 53'h1fffffffffffff) begin
             z_e <=z_e + 1;
           end
         end
@@ -1834,7 +1837,7 @@ module double_adder(
 
       special_cases:
       begin
-        //if a is NaN or b is NaN return NaN
+        //if a is NaN or b is NaN return NaN 
         if ((a_e == 1024 && a_m != 0) || (b_e == 1024 && b_m != 0)) begin
           z[63] <= 1;
           z[62:52] <= 2047;
@@ -1990,6 +1993,10 @@ module double_adder(
         if ($signed(z_e) == -1022 && z_m[52] == 0) begin
           z[62 : 52] <= 0;
         end
+        if ($signed(z_e) == -1022 && z_m[52:0] == 0) begin
+           z[63] <= 0;
+        end
+
         //if overflow occurs, return inf
         if ($signed(z_e) > 1023) begin
           z[51 : 0] <= 0;

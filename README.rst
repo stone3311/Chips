@@ -11,7 +11,7 @@ Chips
 Try it out
 ----------
 
-Why not try the `Chips <http://dawsonjon.pythonanywhere.com>`_ web app. 
+Why not try the `Chips <http://benfre.pythonanywhere.com>`_ web app. 
 
 Design components in C, design FPGAs in Python
 ----------------------------------------------

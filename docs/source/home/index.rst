@@ -63,7 +63,7 @@ A quick example
             chip.simulation_step()
 
         #check the results
-        print list(scanner_output)
+        print(list(scanner_output))
 
 .. testoutput::
 
@@ -127,4 +127,4 @@ components thrown in!
 Try it out
 ----------
 
-Why not try the `Chips <http://dawsonjon.pythonanywhere.com>`_ web app. 
+Why not try the `Chips <http://benfre.pythonanywhere.com>`_ web app. 

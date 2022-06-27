@@ -11,3 +11,4 @@ Reference Manual
    c_compiler.rst
    c_library.rst
    interface.rst
+   c2verilog.rst

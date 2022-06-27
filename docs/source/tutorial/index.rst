@@ -7,31 +7,32 @@ Create and Test a C component
 Why not start with a simple example. With your favourite text editor, create a
 file count.c and add the following::
         
-        void count(){
+        void main(){
+                int i;
                 for(i=1; i<=10; i++){
                         report(i);
                 }
         }
 
 You can convert C components into Verilog components using the C2Verilog
-compiler. The *iverilog* option causes the generated Verilog component to be
+compiler. The verilog output is *test.v* file. The *iverilog* option causes the generated Verilog component to be
 compiled using Icarus Verilog. The *run* option causes simulation to be run::
 
         ~$ c2verilog iverilog run test.c
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        10
+          1 (report (int) at line: 5 in file: /home/ben/test.c)
+          2 (report (int) at line: 5 in file: /home/ben/test.c)
+          3 (report (int) at line: 5 in file: /home/ben/test.c)
+          4 (report (int) at line: 5 in file: /home/ben/test.c)
+          5 (report (int) at line: 5 in file: /home/ben/test.c)
+          6 (report (int) at line: 5 in file: /home/ben/test.c)
+          7 (report (int) at line: 5 in file: /home/ben/test.c)
+          8 (report (int) at line: 5 in file: /home/ben/test.c)
+          9 (report (int) at line: 5 in file: /home/ben/test.c)
+         10 (report (int) at line: 5 in file: /home/ben/test.c)
+        /home/ben/test.v:308: $finish called at 4675 (1s)
 
-When a design is reset, execution starts with the last function defined in
-the C file. This need not be called *main*. The name of the last function
-will be used as the name for the generated Verilog component. The C program will
+When a design is reset, execution starts with the *main* function defined in
+the C file. The C program will
 appear to execute in sequence, although the compiler may execute instructions
 concurrently if it does not affect the outcome of the program. This will allow
 your component to take advantage of the inherent parallelism present in a hardware
@@ -43,15 +44,18 @@ synthesise the design it will be ignored.
 
 This component doesn't have any inputs or outputs, so it isn't going to be very
 useful in a real design. You can add inputs and outputs to a components using
-function calls with special names. Functions that start with the name *input_*
-or *output_* are interpreted as inputs, or outputs respectively.
+streams. Open streams with *input* or *output* calls with stream names. Read from
+streams using *fgetc* and write to stream using *fputc*.
 
 ::
 
+        unsigned spam = input("spam");
+        unsigned eggs = input("eggs");
+        unsigned fish = input("fish");
         int temp;
-        temp = input_spam(); //reads from an input called spam
-        temp = input_eggs(); //reads from an input called eggs
-        output_fish(temp);   //writes to an output called fish
+        temp = fgetc(spam); //reads from an input called spam
+        temp = fgetc(eggs); //reads from an input called eggs
+        fputc(temp, fish);   //writes to an output called fish
 
 
 Reading or writing from inputs and outputs causes program execution to block
@@ -64,8 +68,8 @@ If you don't want to commit yourself to reading and input and blocking
 execution, you can check if data is ready::
 
         int temp;
-        if(ready_spam()){
-                temp = input_spam();
+        if(ready(spam)){
+                temp = fgetc(spam);
         }
 
 There is no equivalent function to check if an output is ready to receive data,
@@ -77,7 +81,7 @@ We can now construct some basic hardware components quite simply. Here's a count
         void counter(){
                 while(1){
                         for(i=1; i<=10; i++){
-                                output_out(i);
+                                fputc(i, out);
                         }
                 }
         }
@@ -86,7 +90,7 @@ We can generate an adder like this::
 
         void added(){
                 while(1){
-                        output_z(input_a()+input_b());
+                        fputc(fgetc(a) + fgetc(b), z);
                 }
         }
 
@@ -94,7 +98,7 @@ Or a divider like this (yes, you can synthesise division)::
 
         void divider(){
                 while(1){
-                        output_z(input_a()/input_b());
+                        fputc(fgetc(a) / fgetc(b), z);
                 }
         }
 
@@ -103,9 +107,9 @@ We can split a stream of data into two identical data streams using a tee functi
         void tee(){
                 int temp;
                 while(1){
-                        temp = input_a();
-                        output_y(temp);
-                        output_z(temp);
+                        temp = fgetc(a);
+                        fputc(temp, y);
+                        fputc(temp, y);
                 }
         }
 
@@ -114,10 +118,10 @@ If we want to merge two streams of data, we could interlace them::
         void interlace(){
                 int temp;
                 while(1){
-                        temp = input_a();
-                        output_z(temp);
-                        temp = input_b();
-                        output_z(temp);
+                        temp = fgetc(a);
+                        fputc(temp, z);
+                        temp = fgetc(b);
+                        fputc(temp, z);
                 }
         }
 
@@ -126,12 +130,12 @@ or we could prioritise one stream over the other::
         void arbiter(){
                 int temp;
                 while(1){
-                        if( ready_a() ){
-                                temp = input_a();
-                                output_z(temp);
-                        } else if( ready_b() ){
-                                temp = input_b();
-                                output_z(temp);
+                        if( ready(a) ){
+                                temp = fgetc(a);
+                                fputc(temp, z);
+                        } else if( ready(b) ){
+                                temp = fgetc(b);
+                                fputc(temp, z);
                         }
                 }
         }

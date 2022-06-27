@@ -5,20 +5,20 @@ Download (github)
 -----------------
 
 You can download the 
-`source <https://github.com/dawsonjon/Chips-2.0/archive/master.zip>`_ 
+`source <https://github.com/benfre/Chips/archive/master.zip>`_ 
 from the
-`Git Hub <https://github.com/dawsonjon/Chips-2.0>`_ 
+`GitHub <https://github.com/benfre/Chips>`_ 
 homepage. Alternatively clone the project using git::
 
-    ~$ git clone --recursive https://github.com/dawsonjon/Chips-2.0.git
+    ~$ git clone --recursive https://github.com/benfre/Chips.git
 
 Install from github
 -------------------
 
 ::
 
-        $ cd Chips-2.0
-        $ sudo python setup install
+        $ cd Chips
+        $ sudo python3 setup.py install
 
 
 Install from PyPi
@@ -26,7 +26,7 @@ Install from PyPi
 
 ::
 
-        $ pip-install chips
+        $ pip3 install chips-python
 
 
 Icarus Verilog

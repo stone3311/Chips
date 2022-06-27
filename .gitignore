@@ -11,7 +11,8 @@ chips_lib.v
 *.bak
 *,cover
 play*.v
-.*
 *.v
 *.egg-info
 *.so
+.vscode
+static

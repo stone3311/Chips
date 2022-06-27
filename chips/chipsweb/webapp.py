@@ -22,7 +22,7 @@ myform = form.Form(
     form.Dropdown(
         "Examples",
         list(examples.keys()),
-        onclick="return update_form()"),
+        onchange="return update_form()"),
 )
 
 

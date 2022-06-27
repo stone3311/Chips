@@ -140,19 +140,19 @@ class Chip:
 
     A diagrammatic representation of the `Chip` is shown below.
 
-    ::
+    .. aafig::
 
-               +-------+       +-------+
-               | adder |       | adder |
-        A =====>       >=======>       >=====> Z
-        B =====>       |       |       |
-               +-------+       |       |
-                               |       |
-               +-------+       |       |
-               | adder |       |       |
-        C =====>       >=======>       |
-        D =====>       |       |       |
-               +-------+       +-------+
+                +-------+        +-------+
+                |"adder"|        |"adder"|
+        A =====>+       +=======>+       +=====> Z
+        B =====>+       |        |       |
+                +-------+        |       |
+                                 |       |
+                +-------+        |       |
+                |"adder"|        |       |
+        C =====>+       +=======>+       |
+        D =====>+       |        |       |
+                +-------+        +-------+
 
     Functions provide a means to build more complex components out of simple
     ones, but it doesn't stop there. By providing the basic building blocks,

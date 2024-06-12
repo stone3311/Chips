@@ -16,3 +16,4 @@ play*.v
 *.so
 .vscode
 static
+.venv
